@@ -1,0 +1,65 @@
+
+
+.pages {
+    display: inline-block;
+}
+
+.searchModule {
+    text-align: center;
+
+    .searchInput {
+        font-size: 21px;
+        text-align: center;
+        border-radius: 7px;
+        width: 50%;
+        height: 42px;
+        margin: 15px;
+        margin-bottom: 0;
+        border: 0;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    }
+
+    .searchResults {
+        border-bottom: 2px solid #FFD60A;
+
+        .searchResult {
+            display: inline-block;
+            padding: 1%;
+            a{
+                padding: 4px;
+                background-color: #003566;
+                color: white;
+                text-decoration: none;
+                border-radius: 3px;
+            }
+        }
+    }
+}
+.navigation{
+    margin-bottom: 2rem;
+    button{
+        font-size: 1.4rem;
+        background: #000814;
+        border: 0;
+        color: white;
+        margin: .1rem;
+        border-radius: .3rem;
+        padding: .2rem .5rem;
+        &:hover{
+            background: #000814;
+        }
+        &:hover{
+            color: #000814;
+            background: #FFD60A;;
+            cursor: pointer;
+        }
+        &:disabled{
+            background: #000814;
+            color: #003566;
+            cursor:default;
+        }
+    }
+    .page{
+        background: none;
+    }
+}

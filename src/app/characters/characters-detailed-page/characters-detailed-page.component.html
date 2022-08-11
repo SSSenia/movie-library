@@ -1,0 +1,93 @@
+<div *ngIf="!error; else error">
+    <div *ngIf="character; else loading" class="wrapper">
+        <section class="section-info">
+            <img class="character-img"
+                [src]="'https://starwars-visualguide.com/assets/img/characters/'+character.url.slice(29, -1)+'.jpg'">
+            <div class="character-name">{{character.name}}</div>
+            <div class="character-info">
+                <div class="property-names">
+                    Height:<br>
+                    Mass:<br>
+                    Hair color:<br>
+                    Skin color:<br>
+                    Eye color:<br>
+                    Birth year:<br>
+                    Gender:
+                </div>
+                <div class="property-values">
+                    {{character.height}}<br>
+                    {{character.mass}}<br>
+                    {{character.hair_color}}<br>
+                    {{character.skin_color}}<br>
+                    {{character.eye_color}}<br>
+                    {{character.birth_year}}<br>
+                    {{character.gender}}
+                </div>
+            </div>
+        </section>
+        <section *ngIf="loadedPlanet; else loading" class="section-planet">
+            <div class="section-name">Homeworld</div>
+            <img class="planet-img"
+                [src]="'https://starwars-visualguide.com/assets/img/planets/'+planet.url.slice(30, -1)+'.jpg'"
+                onerror="this.src='https://starwars-visualguide.com/assets/img/big-placeholder.jpg';">
+            <div class="planet-name">{{planet.name}}</div>
+            <div class="planet-info">
+                <div class="planet-property">
+                    <div class="property-names"> Rotation period:</div>
+                    <div class="property-values"> {{planet.rotation_period}}</div>
+                </div>
+                <div class="planet-property">
+                    <div class="property-names"> Orbital period:</div>
+                    <div class="property-values"> {{planet.orbital_period}}</div>
+                </div>
+                <div class="planet-property">
+                    <div class="property-names"> Diameter:</div>
+                    <div class="property-values"> {{planet.diameter}}</div>
+                </div>
+                <div class="planet-property">
+                    <div class="property-names"> Climate:</div>
+                    <div class="property-values"> {{planet.climate}}</div>
+                </div>
+                <div class="planet-property">
+                    <div class="property-names"> Gravity:</div>
+                    <div class="property-values"> {{planet.gravity}}</div>
+                </div>
+                <div class="planet-property">
+                    <div class="property-names"> Terrain:</div>
+                    <div class="property-values"> {{planet.terrain}}</div>
+                </div>
+                <div class="planet-property">
+                    <div class="property-names"> Surface water:</div>
+                    <div class="property-values"> {{planet.surface_water}}</div>
+                </div>
+                <div class="planet-property">
+                    <div class="property-names"> Population:</div>
+                    <div class="property-values"> {{planet.population}}</div>
+                </div>
+            </div>
+        </section>
+        <section *ngIf="loadedFilms == character.films.length*2; else loading" class="section-films">
+            <div class="section-name">Films</div>
+            <div class="films">
+                <div class="film" *ngFor="let movie of movies">
+                    <a [routerLink]="['/movie', movie.url.slice(28, -1)]">
+                        <div class="card">
+                            <div class="card-name">
+                                <p>{{movie.title}}</p>
+                            </div>
+                            <img [src]="'https://image.tmdb.org/t/p/w500'+ movie.results[0].poster_path"
+                                onerror="this.src='https://starwars-visualguide.com/assets/img/big-placeholder.jpg';">
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+<ng-template #loading>
+    <p class="loading">loading...</p>
+</ng-template>
+<ng-template #error>
+    <p class="error">This character does not exist</p>
+    <a class="goBack" [routerLink]="['/characters']">Go back</a>
+</ng-template>

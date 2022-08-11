@@ -1,0 +1,51 @@
+<div class="searchModule">
+    <input class="searchInput" type="text" placeholder="Search character" [(ngModel)]="search">
+    <div class="searchResults" *ngIf="(searchArray | searchCharacters:search).length">
+        <div class="searchResult" *ngFor="let character of searchArray | searchCharacters:search">
+            <a [routerLink]="['/character', character.url.slice(29, -1)]">{{character.name}}</a>
+        </div>
+    </div>
+</div>
+
+<div  *ngIf="loadedNeed != 0; else getAmountPages">
+    <div *ngIf="loadedNeed == loaded; else loading">
+        <div class="list">
+            <app-character *ngFor="let character of characters" [character]="character">
+            </app-character>
+        </div>
+        
+        <nav class="navigation">
+            <button [disabled]="+currentPage == 1" [routerLink]="['/characters']" [queryParams]="{page: 1}">
+                First
+            </button>
+            <button [disabled]="+currentPage == 1" [routerLink]="['/characters']" [queryParams]="{page: +currentPage-1}">
+                Prev page
+            </button>
+        
+            <div class="pages" *ngFor="let page of avialablePages">
+                <button
+                    class="page"
+                    [disabled]="+currentPage == +page"
+                    *ngIf="page > +currentPage-3 && page < +currentPage+3"
+                    [routerLink]="['/characters']"
+                    [queryParams]="{page: +page}"
+                    >
+                    {{page}}</button>
+            </div>
+
+            <button [disabled]="+currentPage == maxPages" [routerLink]="['/characters']" [queryParams]="{page: +currentPage+1}">
+                Next page
+            </button>
+            <button [disabled]="+currentPage == maxPages" [routerLink]="['/characters']" [queryParams]="{page: +maxPages}">
+                Last
+            </button>
+        </nav>
+    </div>
+</div>
+
+<ng-template #getAmountPages>
+    <p class="loading">Conneting to server...</p>
+</ng-template>
+<ng-template #loading>
+    <p class="loading">Loading... {{loaded}} of {{loadedNeed}}</p>
+</ng-template>

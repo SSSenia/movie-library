@@ -1,0 +1,10 @@
+<div class="list" *ngIf="loadedList; else loadingList">
+    <div class="list" *ngIf="loadedPoster == movies.length; else loadingPosters"></div>
+    <app-movie *ngFor="let movie of movies" [movie]="movie"></app-movie>
+</div>
+<ng-template #loadingList>
+    <p class="loading">Connnecting to server...</p>
+</ng-template>
+<ng-template #loadingPosters>
+    <p class="loading">Loading... {{loadedPoster}} of {{movies.length}}</p>
+</ng-template>

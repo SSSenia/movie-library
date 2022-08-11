@@ -1,0 +1,162 @@
+.character-img {
+    float: left;
+    width: 40%;
+    height: 600px;
+    object-fit: cover;
+}
+
+.character-name {
+    padding: 24px;
+    font-size: 52px;
+    background-color: #003566;
+}
+
+.character-info {
+    width: 60%;
+    display: flex;
+    justify-content: space-between;
+    text-align: left;
+    background-color: #000814;
+    padding: 0 5rem;
+    font-size: 35px;
+    height: 474px;
+
+    .property-names {
+        margin: auto 0;
+        text-align: left;
+        border-bottom: 2px solid #FFC300;
+    }
+
+    .property-values {
+        margin: auto 0;
+        text-align: right;
+        border-bottom: 2px solid #FFC300;
+    }
+}
+
+.wrapper {
+    max-width: 1100px;
+    margin: 4rem auto;
+    background-color: #FFC300;
+}
+
+.section-planet {
+    padding: 3rem 2rem;
+
+    .planet-img {
+        float: right;
+        width: 40%;
+        object-fit: cover;
+
+    }
+
+    .planet-name {
+        margin-bottom: 2rem;
+        background-color: #000814;
+        padding: .5rem;
+        font-size: 3rem;
+        font-weight: bold;
+        width: 55%;
+    }
+
+    .planet-info {
+        width: 55%;
+        padding: 3rem 4rem;
+        background-color: #000814;
+    }
+
+    .planet-property {
+        display: flex;
+        justify-content: space-between;
+        font-size: 2.2rem;
+        border-bottom: 2px solid #FFC300;
+
+        &:last-child {
+            border-bottom: none;
+        }
+
+        .property-names {
+            margin: auto 0;
+            text-align: left;
+        }
+
+        .property-values {
+            margin: auto 0;
+            text-align: right;
+        }
+    }
+}
+
+.section-name {
+    margin-left: auto;
+    margin-bottom: 2rem;
+    background-color: #003566;
+    padding: .5rem;
+    font-size: 3rem;
+    font-weight: bold;
+    width: 55%;
+}
+
+.section-films {
+    padding: 3rem 2rem;
+    
+    .films {
+        background-color: #000814;
+
+        .film {
+
+            display: inline-block;
+
+            .card {
+                position: relative;
+                margin: 30px 20px;
+                width: 200px;
+                height: 330px;
+                box-shadow: 0 0 7px 2px #0f151f;
+                border-radius: 10px;
+
+                .card-name {
+                    position: absolute;
+                    overflow: hidden;
+                    width: 100%;
+                    height: 30%;
+                    bottom: 0;
+                    left: 0;
+                    font-size: 30px;
+                    font-weight: 700;
+                    opacity: 0%;
+                    z-index: 2;
+                    color: #fff;
+                    border-bottom-right-radius: 10px;
+                    border-bottom-left-radius: 10px;
+
+                    p {
+                        height: 100%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                    }
+                }
+
+                &:hover .card-name {
+                    transition: all 0.5s;
+                    background-color: rgba($color: #000, $alpha: 0.7);
+                    opacity: 100%;
+                }
+
+                img {
+                    height: 100%;
+                    object-fit: cover;
+                    z-index: 1;
+                    border-radius: 10px;
+                }
+
+                &:hover img {
+                    transition: all 0.5s;
+                    filter: brightness(50%);
+                    box-shadow: 0 0 8px 4px #151e2b;
+                }
+            }
+        }
+    }
+}

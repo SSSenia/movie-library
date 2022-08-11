@@ -1,1 +1,26 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+body {
+    font-family: 'Roboto', sans-serif;
+    color: white;
+    background-color: #001D3D;
+}
+
+.loading, .error{
+    margin-top: 30px;
+    font-size: 30px;
+}
+.goBack{
+    display: block;
+    width: 150px;
+    margin: 30px auto auto auto;
+    padding: 10px;
+    font-size: 30px;
+    border-radius: 4px;
+    background-color: #FFC300;
+    text-decoration: none;
+    color: #000814;
+    &:hover{
+        background-color: #FFD60A;
+    }
+}

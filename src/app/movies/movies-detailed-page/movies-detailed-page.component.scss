@@ -1,0 +1,139 @@
+.film-img {
+    float: left;
+    width: 37%;
+    height: 600px;
+    object-fit: cover;
+}
+
+.film-name {
+    padding: 24px;
+    font-size: 52px;
+    background-color: #003566;
+}
+
+.film-info {
+    width: 63%;
+    display: grid;
+    text-align: left;
+    background-color: #000814;
+    padding: 5rem 5rem;
+    font-size: 30px;
+    height: 474px;
+
+    .split {
+        display: flex;
+        justify-content: space-between;
+        border-bottom: 2px solid #FFC300;
+        padding: 15px;
+
+        .property-names {
+
+            margin: auto 0;
+            text-align: left;
+        }
+
+        .property-values {
+            margin: auto 0;
+            text-align: right;
+        }
+
+        &:last-child {
+            border-bottom: none;
+        }
+    }
+
+}
+
+.wrapper {
+    max-width: 1100px;
+    margin: 4rem auto;
+    background-color: #FFC300;
+}
+
+.section-name {
+    margin-left: auto;
+    margin-bottom: 2rem;
+    background-color: #003566;
+    padding: .5rem;
+    font-size: 3rem;
+    font-weight: bold;
+    width: 55%;
+}
+
+.section-opening {
+    padding: 3rem 2rem;
+
+    .opening-text {
+        padding: 3rem 4rem;
+        background-color: #000814;
+        font-size: 2rem;
+    }
+}
+
+.section-characters {
+    padding: 3rem 2rem;
+
+    .characters-list {
+        padding: 3rem 4rem;
+        background-color: #000814;
+        font-size: 2rem;
+
+        .character-item {
+            display: inline-block;
+        }
+
+        .card {
+            position: relative;
+            display: inline-block;
+            margin: 30px 20px;
+            width: 190px;
+            height: 300px;
+            box-shadow: 0 0 7px 2px #0f151f;
+            border-radius: 10px;
+            transition: all 0.5s;
+
+            .name {
+                position: absolute;
+                overflow: hidden;
+                width: 100%;
+                height: 30%;
+                bottom: 0;
+                left: 0;
+                font-size: 2rem;
+                font-weight: 700;
+                opacity: 0%;
+                z-index: 2;
+                color: #fff;
+                border-bottom-right-radius: 10px;
+                border-bottom-left-radius: 10px;
+
+                p {
+                    height: 100%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+
+                background-color: rgba($color: #000, $alpha: 0.7);
+                opacity: 100%;
+            }
+
+            img {
+                height: 100%;
+                object-fit: cover;
+                z-index: 1;
+                border-radius: 10px;
+            }
+
+            &:hover img {
+                transition: all 0.5s;
+                filter: brightness(50%);
+                box-shadow: 0 0 8px 4px #151e2b;
+            }
+
+            &:hover {
+                transform: rotate(2deg);
+            }
+        }
+    }
+}

@@ -1,0 +1,37 @@
+header {
+    background-color: #FFC300;
+}
+
+section {
+    text-align: center;
+}
+
+a {
+    font-size: 16px;
+    font-weight: bold;
+    color: #000814;
+    text-decoration: none;
+    display: inline-block;
+    padding: 14px;
+    border: 3px solid #FFC300;
+    border-radius: 15px;
+
+    &:hover {
+        background-color: #FFD60A;
+    }
+}
+
+.links {
+    text-align: center;
+}
+
+.active {
+    background-color: #001D3D;
+    border: 3px solid #FFC300;
+    border-radius: 15px;
+    color: white;
+
+    &:hover {
+        background-color: #003566;
+    }
+}
