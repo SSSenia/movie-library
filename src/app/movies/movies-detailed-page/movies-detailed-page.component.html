@@ -1,4 +1,4 @@
-<div *ngIf="!error; else error">
+<div *ngIf="!errorCatch; else error">
     <div *ngIf="movie; else loading" class="wrapper">
         <section class="section-info">
             <img class="film-img" [src]="'https://image.tmdb.org/t/p/w500'+ movie.results[0].poster_path"

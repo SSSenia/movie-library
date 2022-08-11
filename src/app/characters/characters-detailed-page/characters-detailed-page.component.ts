@@ -17,7 +17,7 @@ export class CharactersDetailedPageComponent {
   planet!: IPlanet;
   loadedFilms: number  = 0;
   loadedPlanet: boolean = false;
-  error: boolean = false;
+  errorCatch: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -50,7 +50,7 @@ export class CharactersDetailedPageComponent {
         }
       },
       (error)=>{
-        this.error = true;
+        this.errorCatch = true;
       });
     });
   }

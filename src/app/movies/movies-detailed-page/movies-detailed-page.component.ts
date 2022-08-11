@@ -13,7 +13,7 @@ export class MoviesDetailedPageComponent {
 
   movie!: IMovie;
   characters: Array<ICharacter> = [];
-  error: boolean = false;
+  errorCatch: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -35,7 +35,7 @@ export class MoviesDetailedPageComponent {
         }
       },
       (error)=>{
-        this.error = true;
+        this.errorCatch = true;
       });
     });
   }
