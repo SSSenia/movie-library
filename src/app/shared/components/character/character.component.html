@@ -1,8 +1,8 @@
 <!-- getting id https://swapi.dev/api/people/>29>1<-1</ -->
 
-    <a [routerLink]="['/character', character.url.slice(29, -1)]" class="card">
+    <a [routerLink]="['/character', character.url.split('/').splice(-2)[0]]" class="card">
         <div class="name">
             <p>{{character.name}}</p>
         </div>
-        <img [src]="'https://starwars-visualguide.com/assets/img/characters/'+character.id+'.jpg'">
+        <img [src]="imagesUrl + '/characters/'+character.id+'.jpg'">
     </a>

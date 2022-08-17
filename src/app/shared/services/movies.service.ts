@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { IArrayDataMovie, IMovie } from '../interfaces/movies';
 
 @Injectable({
@@ -13,11 +14,11 @@ export class MoviesService {
   ) { }
 
   getAll(): Observable<IArrayDataMovie>{
-    return this.http.get<IArrayDataMovie>('https://swapi.dev/api/films/');
+    return this.http.get<IArrayDataMovie>(`${environment.swapiUrl}/films/`);
   }
 
   getById(id: number): Observable<IMovie>{
-    return this.http.get<IMovie>(`https://swapi.dev/api/films/${id}/`);
+    return this.http.get<IMovie>(`${environment.swapiUrl}/films/${id}/`);
   }
 
   getPoster(title: string): Observable<any>{

@@ -2,7 +2,7 @@
     <input class="searchInput" type="text" placeholder="Search character" [(ngModel)]="search">
     <div class="searchResults" *ngIf="(searchArray | searchCharacters:search).length">
         <div class="searchResult" *ngFor="let character of searchArray | searchCharacters:search">
-            <a [routerLink]="['/character', character.url.slice(29, -1)]">{{character.name}}</a>
+            <a [routerLink]="['/character', character.url.split('/').slice(-2)[0]]">{{character.name}}</a>
         </div>
     </div>
 </div>

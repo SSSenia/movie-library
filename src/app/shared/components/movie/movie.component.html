@@ -1,5 +1,5 @@
 <!-- getting id https://swapi.dev/api/films/>28>1<-1</ -->
-<a [routerLink]="['/movie', movie.url.slice(28, -1)]">
+<a [routerLink]="['/movie', movie.url.split('/').splice(-2)[0]]">
     <div class="card">
         <div class="name">
             <p>{{movie.title}}</p>

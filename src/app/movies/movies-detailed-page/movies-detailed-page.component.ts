@@ -4,6 +4,7 @@ import { ICharacter } from 'src/app/shared/interfaces/characters';
 import { IMovie } from 'src/app/shared/interfaces/movies';
 import { MoviesService } from 'src/app/shared/services/movies.service';
 import { OthersService } from 'src/app/shared/services/others.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-movies-detailed-page',
@@ -15,6 +16,7 @@ export class MoviesDetailedPageComponent {
   movie!: IMovie;
   characters: Array<ICharacter> = [];
   errorCatch: boolean = false;
+  imagesUrl: string = environment.imagesUrl;
 
   constructor(
     private route: ActivatedRoute,

@@ -6,6 +6,7 @@ import { IPlanet } from 'src/app/shared/interfaces/others';
 import { CharactersService } from 'src/app/shared/services/characters.service';
 import { MoviesService } from 'src/app/shared/services/movies.service';
 import { OthersService } from 'src/app/shared/services/others.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-characters-detailed-page',
@@ -20,6 +21,7 @@ export class CharactersDetailedPageComponent {
   loadedFilms: number  = 0;
   loadedPlanet: boolean = false;
   errorCatch: boolean = false;
+  imagesUrl: string = environment.imagesUrl
 
   constructor(
     private route: ActivatedRoute,

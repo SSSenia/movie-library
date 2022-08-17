@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { IArrayDataCharacter, ICharacter } from '../interfaces/characters';
 
 @Injectable({
@@ -52,12 +53,12 @@ export class CharactersService {
   }
 
   getInfo(): Observable<IArrayDataCharacter> {
-    return this.http.get<IArrayDataCharacter>('https://swapi.dev/api/people/');
+    return this.http.get<IArrayDataCharacter>(`${environment.swapiUrl}/people/`);
   }
 
   getById(id: number): Observable<ICharacter> {
     let element = this.parsedArray.find(x => x.id == id)
     if (element) return new Observable(subscriber => subscriber.next(element));
-    else return this.http.get<ICharacter>(`https://swapi.dev/api/people/${id}/`);
+    else return this.http.get<ICharacter>(`${environment.swapiUrl}/people/${id}/`);
   }
 }
