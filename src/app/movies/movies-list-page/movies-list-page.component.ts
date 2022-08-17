@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IArrayDataMovie, IMovie } from 'src/app/shared/interfaces';
+import { IArrayDataMovie, IMovie } from 'src/app/shared/interfaces/movies';
 import { MoviesService } from 'src/app/shared/services/movies.service';
 
 @Component({

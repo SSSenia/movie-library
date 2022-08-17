@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { ICharacter } from '../../interfaces';
+import { ICharacter } from '../../interfaces/characters';
 
 @Component({
   selector: 'app-character',

@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from "@angular/core";
-import { ICharacter } from "../interfaces";
+import { ICharacter } from "../interfaces/characters";
 
 @Pipe({
     name: 'searchCharacters'

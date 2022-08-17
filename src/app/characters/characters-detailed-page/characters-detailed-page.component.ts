@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
-import { ICharacter, IMovie, IPlanet } from 'src/app/shared/interfaces';
+import { ICharacter } from 'src/app/shared/interfaces/characters';
+import { IMovie } from 'src/app/shared/interfaces/movies';
+import { IPlanet } from 'src/app/shared/interfaces/others';
 import { CharactersService } from 'src/app/shared/services/characters.service';
 import { MoviesService } from 'src/app/shared/services/movies.service';
 import { OthersService } from 'src/app/shared/services/others.service';

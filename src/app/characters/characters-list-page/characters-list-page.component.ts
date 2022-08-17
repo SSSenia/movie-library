@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { IArrayDataCharacter, ICharacter } from 'src/app/shared/interfaces';
+import { IArrayDataCharacter, ICharacter } from 'src/app/shared/interfaces/characters';
 import { CharactersService } from 'src/app/shared/services/characters.service';
 
 const DISPLAYED_NUMBER_OF_CARDS = 18;

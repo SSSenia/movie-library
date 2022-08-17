@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { IArrayDataCharacter, ICharacter } from '../interfaces';
+import { IArrayDataCharacter, ICharacter } from '../interfaces/characters';
 
 @Injectable({
   providedIn: 'root'
