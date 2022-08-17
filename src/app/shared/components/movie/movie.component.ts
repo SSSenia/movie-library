@@ -6,9 +6,9 @@ import { IMovie } from '../../interfaces/movies';
   templateUrl: './movie.component.html',
   styleUrls: ['./movie.component.scss']
 })
-export class MovieComponent{
+export class MovieComponent {
 
   @Input() movie!: IMovie;
 
-  constructor() {}
+  constructor() { }
 }

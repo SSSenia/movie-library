@@ -1,8 +1,7 @@
 <div *ngIf="!errorCatch; else error">
     <div *ngIf="character; else loading" class="wrapper">
         <section class="section-info">
-            <img class="character-img"
-                [src]="imagesUrl+'/characters/'+character.url.split('/').slice(-2)[0]+'.jpg'">
+            <img class="character-img" [src]="imagesUrl+'/characters/'+character.url.split('/').slice(-2)[0]+'.jpg'">
             <div class="character-name">{{character.name}}</div>
             <div class="character-info">
                 <div class="property-names">
@@ -27,8 +26,7 @@
         </section>
         <section *ngIf="loadedPlanet; else loading" class="section-planet">
             <div class="section-name">Homeworld</div>
-            <img class="planet-img"
-                [src]="imagesUrl + '/planets/'+planet.url.split('/').slice(-2)[0]+'.jpg'"
+            <img class="planet-img" [src]="imagesUrl + '/planets/'+planet.url.split('/').slice(-2)[0]+'.jpg'"
                 onerror="this.src='https://starwars-visualguide.com/assets/img/big-placeholder.jpg';">
             <div class="planet-name">{{planet.name}}</div>
             <div class="planet-info">
@@ -70,7 +68,7 @@
             <div class="section-name">Films</div>
             <div class="films">
                 <div class="film" *ngFor="let movie of movies">
-                    <a [routerLink]="['/movie', movie.url.split('/').slice(-2)[0]]">
+                    <a [routerLink]="['/movies', movie.url.split('/').slice(-2)[0]]">
                         <div class="card">
                             <div class="card-name">
                                 <p>{{movie.title}}</p>

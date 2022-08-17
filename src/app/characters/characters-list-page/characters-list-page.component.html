@@ -2,26 +2,26 @@
     <input class="searchInput" type="text" placeholder="Search character" [(ngModel)]="search">
     <div class="searchResults" *ngIf="(searchArray | searchCharacters:search).length">
         <div class="searchResult" *ngFor="let character of searchArray | searchCharacters:search">
-            <a [routerLink]="['/character', character.url.split('/').slice(-2)[0]]">{{character.name}}</a>
+            <a [routerLink]="['/characters', character.url.split('/').slice(-2)[0]]">{{character.name}}</a>
         </div>
     </div>
 </div>
 
-<div  *ngIf="loadedNeed != 0; else getAmountPages">
+<div *ngIf="loadedNeed != 0; else getAmountPages">
     <div *ngIf="loadedNeed == loaded; else loading">
         <div class="list">
             <app-character *ngFor="let character of characters" [character]="character">
             </app-character>
         </div>
-        
+
         <nav class="navigation">
             <button [disabled]="+currentPage == 1" [routerLink]="['/characters']" [queryParams]="{page: 1}">
                 First
             </button>
-            <button [disabled]="+currentPage == 1" [routerLink]="['/characters']" [queryParams]="{page: +currentPage-1}">
+            <button [disabled]="+currentPage == 1" [routerLink]="['/characters']"
+                [queryParams]="{page: +currentPage-1}">
                 Prev page
             </button>
-        
             <div class="pages" *ngFor="let page of avialablePages">
                 <button
                     class="page"

@@ -59,6 +59,6 @@ export class CharactersService {
   getById(id: number): Observable<ICharacter> {
     let element = this.parsedArray.find(x => x.id == id)
     if (element) return new Observable(subscriber => subscriber.next(element));
-    else return this.http.get<ICharacter>(`${environment.swapiUrl}/people/${id}/`);
+    else return this.http.get<ICharacter>(`${environment.swapiUrl}/people/${id}`);
   }
 }

@@ -1,8 +1,6 @@
-<!-- getting id https://swapi.dev/api/people/>29>1<-1</ -->
-
-    <a [routerLink]="['/character', character.url.split('/').splice(-2)[0]]" class="card">
-        <div class="name">
-            <p>{{character.name}}</p>
-        </div>
-        <img [src]="imagesUrl + '/characters/'+character.id+'.jpg'">
-    </a>
+<a [routerLink]="['/characters', character.url.split('/').splice(-2)[0]]" class="card">
+    <div class="name">
+        <p>{{character.name}}</p>
+    </div>
+    <img [src]="imagesUrl + '/characters/'+character.id+'.jpg'">
+</a>

@@ -41,12 +41,11 @@
             <div class="section-name">Characters</div>
             <div class="characters-list">
                 <div class="character-item" *ngFor="let character of characters">
-                    <a [routerLink]="['/character', character.url.split('/').slice(-2)[0]]" class="card">
+                    <a [routerLink]="['/characters', character.url.split('/').slice(-2)[0]]" class="card">
                         <div class="name">
                             <p>{{character.name}}</p>
                         </div>
-                        <img
-                            [src]="imagesUrl+'/characters/'+character.url.split('/').slice(-2)[0]+'.jpg'">
+                        <img [src]="imagesUrl+'/characters/'+character.url.split('/').slice(-2)[0]+'.jpg'">
                     </a>
                 </div>
             </div>
