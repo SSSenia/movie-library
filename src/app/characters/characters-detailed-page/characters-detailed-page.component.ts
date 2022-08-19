@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
-import { asyncScheduler, catchError, concat, concatMap, filter, from, map, mergeMap, Observable, scan, skipWhile, switchMap, toArray } from 'rxjs';
+import { catchError, concatMap, from, map, mergeMap, Observable, scan, switchMap } from 'rxjs';
 import { ICharacter } from 'src/app/shared/interfaces/characters';
 import { IMovie } from 'src/app/shared/interfaces/movies';
 import { IPlanet } from 'src/app/shared/interfaces/others';
@@ -48,10 +48,11 @@ export class CharactersDetailedPageComponent {
         return acc;
       }, new Array<IMovie>),
 
-      catchError(() => new Observable((subscriber) => {
+      catchError(() => {
+        return new Observable((subscriber) => {
         this.errorCatch = true;
         subscriber.complete;
-      }))
+      })})
     );
   }
 }

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, map, mergeMap, Observable, scan } from 'rxjs';
+import { catchError, mergeMap, Observable, scan } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { IArrayDataCharacter, ICharacter } from '../interfaces/characters';
 
@@ -48,12 +48,5 @@ export class CharactersService {
     let element = this.parsedArray.find(x => x.id == id)
     if (element) return new Observable(subscriber => subscriber.next(element));
     else return this.http.get<ICharacter>(`${environment.swapiUrl}/people/${id}`)
-    .pipe(
-      catchError((error, caught)=>{
-        return new Observable<ICharacter>((sub)=>{
-          sub.complete;
-        });
-      })
-    );
   }
 }

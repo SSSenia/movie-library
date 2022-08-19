@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
-import { concat, concatMap, from, mergeMap, Observable, switchMap, map, combineLatest, combineLatestAll, takeWhile, merge, mergeAll, toArray, take, of, interval, skip, buffer, zipAll, finalize, scan, catchError, never, NEVER, EMPTY } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+import { concatMap, from, mergeMap, Observable, switchMap, scan, catchError } from 'rxjs';
 import { ICharacter } from 'src/app/shared/interfaces/characters';
 import { IMovie } from 'src/app/shared/interfaces/movies';
 import { MoviesService } from 'src/app/shared/services/movies.service';

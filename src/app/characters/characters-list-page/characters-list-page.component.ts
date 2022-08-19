@@ -17,7 +17,7 @@ export class CharactersListPageComponent {
   currentPage: number = 1;
   maxPages!: number;
   count: number = DISPLAYED_NUMBER_OF_CARDS;
-  loadedNeed: number = 0;
+  loadedNeed: number = 1;
   loaded: number = 0;
   avialablePages: number[] = [];
   characters: ICharacter[] = [];
@@ -42,7 +42,7 @@ export class CharactersListPageComponent {
           this.avialablePages = [];
           this.characters = [];
           this.searchArray = [];
-          this.loadedNeed = 0;
+          this.loadedNeed = 1;
           this.loaded = 0;
           return this.characterService.getInfo();
         }),
@@ -55,16 +55,15 @@ export class CharactersListPageComponent {
             this.avialablePages.push(i);
           let to = +this.currentPage * DISPLAYED_NUMBER_OF_CARDS;
           let from = to - (DISPLAYED_NUMBER_OF_CARDS - 1);
-          this.loaded = 0;
           this.characters = [];
           if (to > this.count) to = this.count;
           this.loadedNeed = to - from + 1;
 
           if (this.loadedNeed < 1) {
-            this.loadedNeed = 0;
+            this.loadedNeed = 1;
             this.router.navigate(['/characters'], { queryParams: { page: this.maxPages } })
           } else if (from < 1) {
-            this.loadedNeed = 0;
+            this.loadedNeed = 1;
             this.router.navigate(['/characters'], { queryParams: { page: 1 } })
           }
           return new Observable<number>((sub) => { for (let i: number = from; i <= to; i++) sub.next(i); });
