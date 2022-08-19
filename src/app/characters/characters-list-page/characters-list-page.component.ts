@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { map, switchMap, concatMap, Observable, mergeMap } from 'rxjs';
+import { map, switchMap, concatMap, Observable, mergeMap, catchError } from 'rxjs';
 import { IArrayDataCharacter, ICharacter } from 'src/app/shared/interfaces/characters';
 import { CharactersService } from 'src/app/shared/services/characters.service';
 
@@ -69,9 +69,16 @@ export class CharactersListPageComponent {
           return new Observable<number>((sub) => { for (let i: number = from; i <= to; i++) sub.next(i); });
         }),
 
-        mergeMap((id: any) => {
+        mergeMap((id: any): Observable<ICharacter> => {
           this.loaded++;
-          return this.characterService.getById(id);
+          return this.characterService.getById(id)
+          .pipe(
+            catchError(()=>{
+              return new Observable<any>((sub)=>{
+                sub.complete;
+              });
+            })
+          );
         }),
 
         map((character: ICharacter) => {
