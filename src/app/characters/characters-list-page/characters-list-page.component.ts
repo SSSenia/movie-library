@@ -70,23 +70,24 @@ export class CharactersListPageComponent {
         }),
 
         mergeMap((id: any): Observable<ICharacter> => {
-          this.loaded++;
           return this.characterService.getById(id)
-          .pipe(
-            catchError(()=>{
-              return new Observable<any>((sub)=>{
-                sub.complete;
-              });
-            })
-          );
+            .pipe(
+              catchError(() => {
+                return new Observable<any>((sub) => {
+                  this.loaded++;
+                  sub.complete;
+                });
+              })
+            );
         }),
 
         map((character: ICharacter) => {
+          this.loaded++;
           this.characters.push(character);
           this.characterService.setItem(character);
           return this.characters.sort((a, b) => { return a.id - b.id });
         })
       );
   }
-  
+
 }
