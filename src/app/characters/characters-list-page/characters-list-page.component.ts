@@ -67,8 +67,6 @@ export class CharactersListPageComponent {
             this.loadedNeed = 0;
             this.router.navigate(['/characters'], { queryParams: { page: 1 } })
           }
-          console.log('from ', from, ' to ',to);
-          
           return new Observable<number>((sub) => { for (let i: number = from; i <= to; i++) sub.next(i); });
         }),
 

@@ -1,7 +1,7 @@
 <div *ngIf="!errorCatch; else error">
     <div *ngIf="response$ | async as response; else loading" class="wrapper">
-        <section class="section-info">
-            <img class="film-img" [src]="'https://image.tmdb.org/t/p/w500'+ (movie.poster | async)"
+        <section class="section-info" *ngIf="movie.poster | async as poster">
+            <img class="film-img" [src]="'https://image.tmdb.org/t/p/w500'+poster"
                 *ngIf="movie.poster">
             <div class="film-name">{{movie.title}}</div>
             <div class="film-info">
