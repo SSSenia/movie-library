@@ -46,6 +46,7 @@ export class CharactersListPageComponent {
           this.loaded = 0;
           return this.characterService.getInfo();
         }),
+        
         switchMap((characters: IArrayDataCharacter) => {
           this.count = characters.count;
           this.characterService.setCount(this.count);
@@ -84,7 +85,6 @@ export class CharactersListPageComponent {
         map((character: ICharacter) => {
           this.loaded++;
           this.characters.push(character);
-          this.characterService.setItem(character);
           return this.characters.sort((a, b) => { return a.id - b.id });
         })
       );

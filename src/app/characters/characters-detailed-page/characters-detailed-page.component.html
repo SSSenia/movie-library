@@ -73,7 +73,7 @@
                             <div class="card-name">
                                 <p>{{movie.title}}</p>
                             </div>
-                            <img [src]="'https://image.tmdb.org/t/p/w500'+ (movie.poster | async)"
+                            <img [src]="'https://image.tmdb.org/t/p/w500'+ (movie.posterObservable | async)"
                                 onerror="this.src=imagesUrl+'/big-placeholder.jpg';">
                         </div>
                     </a>

@@ -4,6 +4,7 @@ import { Observable } from "rxjs";
 import { IPlanet, IStarship } from "../interfaces/others";
 import { ICharacter } from "../interfaces/characters";
 import { IMovie } from "../interfaces/movies";
+import { CharactersService } from "./characters.service";
 
 @Injectable({
   providedIn: 'root'
@@ -11,19 +12,20 @@ import { IMovie } from "../interfaces/movies";
 export class OthersService {
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private charactersService: CharactersService
   ) { }
 
-  getPlanetByAdress(adress: string): Observable<IPlanet> {
-    return this.http.get<IPlanet>(adress);
+  getPlanetByAdress(url: string): Observable<IPlanet> {
+    return this.http.get<IPlanet>(url);
   }
-  getStarshipByAdress(adress: string): Observable<IStarship> {
-    return this.http.get<IStarship>(adress);
+  getStarshipByAdress(url: string): Observable<IStarship> {
+    return this.http.get<IStarship>(url);
   }
-  getMovieByAdress(adress: string): Observable<IMovie> {
-    return this.http.get<IMovie>(adress);
+  getMovieByAdress(url: string): Observable<IMovie> {
+    return this.http.get<IMovie>(url);
   }
-  getCharacterByAdress(adress: string): Observable<ICharacter> {
-    return this.http.get<ICharacter>(adress);
+  getCharacterByAdress(url: string): Observable<ICharacter> {
+    return this.charactersService.getById(+url.split('/').slice(-2)[0]);
   }
 }
