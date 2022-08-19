@@ -1,9 +1,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 
+:root {
+    --rich-black: #000814;
+    --oxford-blue: #001D3D;
+    --prussian-blue: #003566;
+    --mikado-yellow: #FFC300;
+    --gold-web-golden: #FFD60A;
+  }
+
 body {
     font-family: 'Roboto', sans-serif;
     color: white;
-    background-color: #001D3D;
+    background-color: var(--oxford-blue);
 }
 
 .loading, .error{
@@ -17,10 +25,10 @@ body {
     padding: 10px;
     font-size: 30px;
     border-radius: 4px;
-    background-color: #FFC300;
+    background-color: var(--mikado-yellow);
     text-decoration: none;
-    color: #000814;
+    color: var(--rich-black);
     &:hover{
-        background-color: #FFD60A;
+        background-color: var(--gold-web-golden);
     }
 }

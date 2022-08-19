@@ -20,14 +20,14 @@
     }
 
     .searchResults {
-        border-bottom: 2px solid #FFD60A;
+        border-bottom: 2px solid var(--gold-web-golden);
 
         .searchResult {
             display: inline-block;
             padding: 1%;
             a{
                 padding: 4px;
-                background-color: #003566;
+                background-color: var(--prussian-blue);
                 color: white;
                 text-decoration: none;
                 border-radius: 3px;
@@ -39,23 +39,23 @@
     margin-bottom: 2rem;
     button{
         font-size: 1.4rem;
-        background: #000814;
+        background: var(--rich-black);
         border: 0;
         color: white;
         margin: .1rem;
         border-radius: .3rem;
         padding: .2rem .5rem;
         &:hover{
-            background: #000814;
+            background: var(--rich-black);
         }
         &:hover{
-            color: #000814;
-            background: #FFD60A;;
+            color: var(--rich-black);
+            background: var(--gold-web-golden);;
             cursor: pointer;
         }
         &:disabled{
-            background: #000814;
-            color: #003566;
+            background: var(--rich-black);
+            color: var(--prussian-blue);
             cursor:default;
         }
     }
