@@ -1,3 +1,5 @@
+import { Observable } from "rxjs"
+
 export interface IMovie {
     characters: string[],
     created: string,
@@ -13,7 +15,7 @@ export interface IMovie {
     title: string,
     url: string,
     vehicles: string[],
-    results: Array<any>
+    poster: Observable<string>
 }
 
 export interface IArrayDataMovie {

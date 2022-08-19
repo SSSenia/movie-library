@@ -3,6 +3,6 @@
         <div class="name">
             <p>{{movie.title}}</p>
         </div>
-        <img [src]="'https://image.tmdb.org/t/p/w500'+ movie.results[0].poster_path" *ngIf="movie.results">
+        <img [src]="'https://image.tmdb.org/t/p/w500'+ (movie.poster | async)">
     </div>
 </a>

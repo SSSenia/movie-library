@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Observable, switchMap } from 'rxjs';
 import { IArrayDataMovie, IMovie } from 'src/app/shared/interfaces/movies';
 import { MoviesService } from 'src/app/shared/services/movies.service';
 
@@ -10,22 +11,11 @@ import { MoviesService } from 'src/app/shared/services/movies.service';
 export class MoviesListPageComponent {
 
   movies: Array<IMovie> = [];
-  loadedList = false;
-  loadedPoster = 0;
+  response$: Observable<any>;
 
   constructor(
     private moviesService: MoviesService
   ) {
-    this.moviesService.getAll().subscribe((movies: IArrayDataMovie) => {
-      this.movies = movies.results;
-      this.loadedList = true;
-
-      for (let i = 0; i < this.movies.length; i++) {
-        moviesService.getPoster(this.movies[i].title).subscribe((search) => {
-          this.movies[i].results = search.results;
-          this.loadedPoster++;
-        });
-      }
-    });
+    this.response$ = this.moviesService.getAll();
   }
 }

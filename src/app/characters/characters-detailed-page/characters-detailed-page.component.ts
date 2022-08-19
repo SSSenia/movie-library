@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
+import { asyncScheduler, catchError, concat, concatMap, filter, from, map, mergeMap, Observable, scan, skipWhile, switchMap, toArray } from 'rxjs';
 import { ICharacter } from 'src/app/shared/interfaces/characters';
 import { IMovie } from 'src/app/shared/interfaces/movies';
 import { IPlanet } from 'src/app/shared/interfaces/others';
@@ -15,47 +16,42 @@ import { environment } from 'src/environments/environment';
 })
 export class CharactersDetailedPageComponent {
 
-  movies: Array<IMovie> = [];
   character!: ICharacter;
   planet!: IPlanet;
-  loadedFilms: number  = 0;
-  loadedPlanet: boolean = false;
   errorCatch: boolean = false;
-  imagesUrl: string = environment.imagesUrl
+  imagesUrl: string = environment.imagesUrl;
+  response$!: Observable<any>;
 
   constructor(
     private route: ActivatedRoute,
     private charactersService: CharactersService,
     private othersService: OthersService,
-    private moviesService: MoviesService
+    public moviesService: MoviesService
   ) {
-    this.route.params.subscribe((params: Params) => {
-      this.charactersService.getById(params['id']).subscribe((character: ICharacter) => {
+
+    this.response$ = this.route.params.pipe(
+      switchMap((params: Params) => this.charactersService.getById(params['id'])),
+
+      concatMap((character: ICharacter) => {
         this.character = character;
+        return this.othersService.getPlanetByAdress(character.homeworld);
+      }),
 
-        this.othersService.getPlanetByAdress(this.character.homeworld).subscribe((planet: IPlanet) => {
-          this.planet = planet;
-          this.loadedPlanet = true;
-        });
+      map((planet: IPlanet) => this.planet = planet),
 
-        for (let i of this.character.films) {
-          othersService.getMovieByAdress(i).subscribe((movie: IMovie) => {
-            this.loadedFilms++;
-            this.movies.push(movie);
+      concatMap(() => from(this.character.films)),
 
-            if (this.loadedFilms == this.character.films.length)
-              for (let i = 0; i < this.movies.length; i++) {
-                moviesService.getPoster(this.movies[i].title).subscribe((search) => {
-                  this.movies[i].results = search.results;
-                  this.loadedFilms++;
-                });
-              }
-          });
-        }
-      },
-      (error)=>{
+      mergeMap((urlMovie: string) => moviesService.getById(+urlMovie.split('/').slice(-2)[0])),
+
+      scan((acc, movie: IMovie) => {
+        acc.push(movie);
+        return acc;
+      }, new Array<IMovie>),
+
+      catchError(() => new Observable((subscriber) => {
         this.errorCatch = true;
-      });
-    });
+        subscriber.complete;
+      }))
+    );
   }
 }

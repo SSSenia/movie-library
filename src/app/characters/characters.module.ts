@@ -1,5 +1,5 @@
 import { NgModule } from "@angular/core";
-import { FormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
 import { SharedModule } from "../shared/shared.module";
 import { CharactersDetailedPageComponent } from "./characters-detailed-page/characters-detailed-page.component";
@@ -16,6 +16,7 @@ import { CharactersListPageComponent } from "./characters-list-page/characters-l
     ],
     imports: [
         FormsModule,
+        ReactiveFormsModule,
         SharedModule,
         RouterModule.forChild([
             { path: '', component: CharactersListPageComponent },

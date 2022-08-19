@@ -8,11 +8,12 @@ import { FormsModule } from '@angular/forms';
 import { SharedModule } from './shared/shared.module';
 import { CharactersModule } from './characters/characters.module';
 import { MoviesModule } from './movies/movies.module';
+import { ParseIdFromUrlPipe } from './shared/pipes/parse-id-from-url.pipe';
 
 
 @NgModule({
   declarations: [
-    AppComponent,
+    AppComponent
   ],
   imports: [
     BrowserModule,

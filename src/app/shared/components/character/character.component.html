@@ -2,5 +2,5 @@
     <div class="name">
         <p>{{character.name}}</p>
     </div>
-    <img [src]="imagesUrl + '/characters/'+character.id+'.jpg'">
+    <img [src]="imagesUrl + '/characters/'+character.url.split('/').splice(-2)[0]+'.jpg'">
 </a>

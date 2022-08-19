@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
+import { concat, concatMap, from, mergeMap, Observable, switchMap, map, combineLatest, combineLatestAll, takeWhile, merge, mergeAll, toArray, take, of, interval, skip, buffer, zipAll, finalize, scan, catchError, never, NEVER, EMPTY } from 'rxjs';
 import { ICharacter } from 'src/app/shared/interfaces/characters';
 import { IMovie } from 'src/app/shared/interfaces/movies';
 import { MoviesService } from 'src/app/shared/services/movies.service';
@@ -17,29 +18,33 @@ export class MoviesDetailedPageComponent {
   characters: Array<ICharacter> = [];
   errorCatch: boolean = false;
   imagesUrl: string = environment.imagesUrl;
+  response$!: Observable<any>;
 
   constructor(
     private route: ActivatedRoute,
     private moviesService: MoviesService,
     private othersService: OthersService
   ) {
-    this.route.params.subscribe((params: Params) => {
-      this.moviesService.getById(params['id']).subscribe((movie: IMovie) => {
+
+    this.response$ = this.route.params.pipe(
+      switchMap((params) => {
+        return this.moviesService.getById(params['id']);
+      }),
+      concatMap((movie) => {
         this.movie = movie;
-
-        moviesService.getPoster(this.movie.title!).subscribe((search) => {
-          this.movie.results = search.results;
-        });
-
-        for (let character of this.movie.characters!) {
-          this.othersService.getCharacterByAdress(character).subscribe((character: ICharacter) => {
-            this.characters.push(character);
-          });
-        }
-      },
-      (error)=>{
+        return from(this.movie.characters)
+      }),
+      mergeMap((character: string) => {
+        return this.othersService.getCharacterByAdress(character);
+      }),
+      scan((acc, curr) => {
+        acc.push(curr)
+        return acc;
+      }, new Array<ICharacter>),
+      catchError(() => new Observable(subscriber => {
         this.errorCatch = true;
-      });
-    });
+        subscriber.complete();
+      }))
+    );
   }
 }
