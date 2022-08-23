@@ -20,5 +20,5 @@ export interface ICharacter {
 
 export interface IArrayDataCharacter {
     count: number,
-    results: Array<ICharacter>
+    results: ICharacter[]
 }

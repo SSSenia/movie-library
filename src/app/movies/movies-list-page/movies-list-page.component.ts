@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Observable, switchMap } from 'rxjs';
+import { Observable } from 'rxjs';
 import { IArrayDataMovie, IMovie } from 'src/app/shared/interfaces/movies';
 import { MoviesService } from 'src/app/shared/services/movies.service';
 
@@ -10,8 +10,8 @@ import { MoviesService } from 'src/app/shared/services/movies.service';
 })
 export class MoviesListPageComponent {
 
-  movies: Array<IMovie> = [];
-  response$: Observable<any>;
+  movies: IMovie[] = [];
+  response$: Observable<IArrayDataMovie>;
 
   constructor(
     private moviesService: MoviesService

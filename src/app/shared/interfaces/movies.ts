@@ -21,5 +21,5 @@ export interface IMovie {
 
 export interface IArrayDataMovie {
     count: number,
-    results: Array<IMovie>
+    results: IMovie[]
 }

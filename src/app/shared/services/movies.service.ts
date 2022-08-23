@@ -27,7 +27,7 @@ export class MoviesService {
       );
   }
 
-  getById(id: number): Observable<any> {
+  getById(id: number): Observable<IMovie> {
     if (this.dataMovies) return new Observable(sub => sub.next(this.dataMovies.results.find(movie => +movie.url.split('/').slice(-2)[0] == id)));
     return this.http.get<IMovie>(`${environment.swapiUrl}/films/${id}/`)
       .pipe(

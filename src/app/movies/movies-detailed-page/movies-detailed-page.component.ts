@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Params } from '@angular/router';
 import { concatMap, from, mergeMap, Observable, switchMap, scan, catchError } from 'rxjs';
 import { ICharacter } from 'src/app/shared/interfaces/characters';
 import { IMovie } from 'src/app/shared/interfaces/movies';
@@ -27,20 +27,24 @@ export class MoviesDetailedPageComponent {
   ) {
 
     this.response$ = this.route.params.pipe(
-      switchMap((params) => {
+      switchMap((params: Params) => {
         return this.moviesService.getById(params['id']);
       }),
-      concatMap((movie) => {
+
+      concatMap((movie: IMovie) => {
         this.movie = movie;
         return from(this.movie.characters)
       }),
+      
       mergeMap((character: string) => {
         return this.othersService.getCharacterByAdress(character);
       }),
-      scan((acc, curr) => {
+      
+      scan((acc: ICharacter[], curr: ICharacter) => {
         acc.push(curr)
         return acc;
       }, new Array<ICharacter>),
+
       catchError(() => new Observable(subscriber => {
         this.errorCatch = true;
         subscriber.complete();

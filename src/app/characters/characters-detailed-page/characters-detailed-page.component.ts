@@ -43,13 +43,13 @@ export class CharactersDetailedPageComponent {
 
       mergeMap((urlMovie: string) => moviesService.getById(+urlMovie.split('/').slice(-2)[0])),
 
-      scan((acc, movie: IMovie) => {
+      scan((acc: IMovie[], movie: IMovie) => {
         acc.push(movie);
         return acc;
       }, new Array<IMovie>),
 
       catchError(() => {
-        return new Observable((subscriber) => {
+        return new Observable(subscriber => {
         this.errorCatch = true;
         subscriber.complete;
       })})

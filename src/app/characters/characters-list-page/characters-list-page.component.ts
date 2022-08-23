@@ -22,8 +22,8 @@ export class CharactersListPageComponent {
   avialablePages: number[] = [];
   characters: ICharacter[] = [];
   searchArray: ICharacter[] = [];
-  response$!: Observable<any>;
-  search$!: Observable<any>;
+  response$!: Observable<ICharacter[]>;
+
   from: FormGroup = new FormGroup({
     search: new FormControl('')
   });
@@ -33,7 +33,7 @@ export class CharactersListPageComponent {
     private route: ActivatedRoute,
     private router: Router
   ) {
-    this.from.value.search.value
+    
     this.response$ = this.route.queryParams
       .pipe(
         concatMap((params: Params) => {
@@ -54,6 +54,7 @@ export class CharactersListPageComponent {
 
           for (let i = 1; i <= this.maxPages; i++)
             this.avialablePages.push(i);
+
           let to = +this.currentPage * DISPLAYED_NUMBER_OF_CARDS;
           let from = to - (DISPLAYED_NUMBER_OF_CARDS - 1);
           this.characters = [];
@@ -67,10 +68,10 @@ export class CharactersListPageComponent {
             this.loadedNeed = 1;
             this.router.navigate(['/characters'], { queryParams: { page: 1 } })
           }
-          return new Observable<number>((sub) => { for (let i: number = from; i <= to; i++) sub.next(i); });
+          return new Observable<number>(sub => { for (let i: number = from; i <= to; i++) sub.next(i); });
         }),
 
-        mergeMap((id: any): Observable<ICharacter> => {
+        mergeMap((id: number): Observable<ICharacter> => {
           return this.characterService.getById(id)
             .pipe(
               catchError(() => {

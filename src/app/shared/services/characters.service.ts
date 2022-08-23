@@ -9,9 +9,9 @@ import { IArrayDataCharacter, ICharacter } from '../interfaces/characters';
 })
 export class CharactersService {
   dataCharacters!: IArrayDataCharacter;
-  parsedArray: Array<ICharacter> = [];
+  parsedArray: ICharacter[] = [];
   count: number = 0;
-  loaded = 0;
+  loaded: number = 0;
 
   constructor(
     private http: HttpClient
@@ -21,17 +21,17 @@ export class CharactersService {
     this.count = count;
   }
 
-  setItem(item: ICharacter): void {
-    if (!this.parsedArray.find(x => x.id == item.id)) this.parsedArray.push(item);
+  setItem(character: ICharacter): void {
+    if (!this.parsedArray.find(item => item.id == character.id)) this.parsedArray.push(character);
   }
 
   getAll(): Observable<ICharacter[]> {
     return new Observable<number>((subscriber) => { for (let i: number = 1; i <= this.count; i++) subscriber.next(i); })
       .pipe(
-        mergeMap((id) => {
+        mergeMap((id: number) => {
           return this.getById(id)
         }),
-        scan((acc, character: ICharacter) => {
+        scan((acc: ICharacter[], character: ICharacter) => {
           acc.push(character);
           return acc;
         }, new Array<ICharacter>)
@@ -50,8 +50,8 @@ export class CharactersService {
   }
 
   getById(id: number): Observable<ICharacter> {
-    let element = this.parsedArray.find(character => character.id == id)
-    if (element) return new Observable(subscriber => subscriber.next(element));
+    let item = this.parsedArray.find(character => character.id == id)
+    if (item) return new Observable(subscriber => subscriber.next(item));
     return this.http.get<ICharacter>(`${environment.swapiUrl}/people/${id}`)
       .pipe(
         map((character: ICharacter) => {
