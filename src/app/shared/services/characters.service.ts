@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, map, mergeMap, Observable, scan } from 'rxjs';
+import { map, mergeMap, Observable, of, range, scan } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { IArrayDataCharacter, ICharacter } from '../interfaces/characters';
 
@@ -8,25 +8,19 @@ import { IArrayDataCharacter, ICharacter } from '../interfaces/characters';
   providedIn: 'root'
 })
 export class CharactersService {
-  dataCharacters!: IArrayDataCharacter;
   parsedArray: ICharacter[] = [];
   count: number = 0;
-  loaded: number = 0;
 
   constructor(
     private http: HttpClient
   ) { }
-
-  setCount(count: number): void {
-    this.count = count;
-  }
 
   setItem(character: ICharacter): void {
     if (!this.parsedArray.find(item => item.id == character.id)) this.parsedArray.push(character);
   }
 
   getAll(): Observable<ICharacter[]> {
-    return new Observable<number>((subscriber) => { for (let i: number = 1; i <= this.count; i++) subscriber.next(i); })
+    return range(1, this.count)
       .pipe(
         mergeMap((id: number) => {
           return this.getById(id)
@@ -38,20 +32,20 @@ export class CharactersService {
       );
   }
 
-  getInfo(): Observable<IArrayDataCharacter> {
-    if (this.dataCharacters) return new Observable<IArrayDataCharacter>(sub => { sub.next(this.dataCharacters); sub.complete() });
+  getCount(): Observable<number> {
+    if (this.count) return of(this.count);
     return this.http.get<IArrayDataCharacter>(`${environment.swapiUrl}/people/`)
       .pipe(
         map((dataCharacters: IArrayDataCharacter) => {
-          this.dataCharacters = dataCharacters;
-          return dataCharacters;
+          this.count = dataCharacters.count;
+          return dataCharacters.count;
         })
       );
   }
 
   getById(id: number): Observable<ICharacter> {
     let item = this.parsedArray.find(character => character.id == id)
-    if (item) return new Observable(subscriber => subscriber.next(item));
+    if (item) return of(item);
     return this.http.get<ICharacter>(`${environment.swapiUrl}/people/${id}`)
       .pipe(
         map((character: ICharacter) => {

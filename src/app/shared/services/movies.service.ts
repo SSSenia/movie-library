@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { find, map, Observable } from 'rxjs';
+import { map, Observable, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { IArrayDataMovie, IMovie } from '../interfaces/movies';
 
@@ -16,7 +16,7 @@ export class MoviesService {
   ) { }
 
   getAll(): Observable<IArrayDataMovie> {
-    if (this.dataMovies) return new Observable(sub => sub.next(this.dataMovies));
+    if (this.dataMovies) return of(this.dataMovies);
     return this.http.get<IArrayDataMovie>(`${environment.swapiUrl}/films/`)
       .pipe(
         map((array: IArrayDataMovie) => {
@@ -28,7 +28,7 @@ export class MoviesService {
   }
 
   getById(id: number): Observable<IMovie> {
-    if (this.dataMovies) return new Observable(sub => sub.next(this.dataMovies.results.find(movie => +movie.url.split('/').slice(-2)[0] == id)));
+    if (this.dataMovies) return of(this.dataMovies.results.find(movie => +movie.url.split('/').slice(-2)[0] == id)!);
     return this.http.get<IMovie>(`${environment.swapiUrl}/films/${id}/`)
       .pipe(
         map((movie: IMovie) => {
@@ -41,7 +41,7 @@ export class MoviesService {
   getPosterObservable(title: string): Observable<string> {
     if (this.dataMovies) {
       let localPoster = this.dataMovies.results.find(x => x.title == title)!.poster;
-      if (localPoster) return new Observable(sub => sub.next(localPoster));
+      if (localPoster) return of(localPoster);
     }
     return this.http.get(`http://api.themoviedb.org/3/search/movie?api_key=ebea8cfca72fdff8d2624ad7bbf78e4c&query=Star Wars ${title}`)
       .pipe(

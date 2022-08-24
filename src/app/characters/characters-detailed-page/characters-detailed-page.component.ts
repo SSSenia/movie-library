@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
-import { catchError, concatMap, from, map, mergeMap, Observable, scan, switchMap } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+import { catchError, concatMap, EMPTY, from, map, mergeMap, Observable, toArray } from 'rxjs';
 import { ICharacter } from 'src/app/shared/interfaces/characters';
-import { IMovie } from 'src/app/shared/interfaces/movies';
 import { IPlanet } from 'src/app/shared/interfaces/others';
 import { CharactersService } from 'src/app/shared/services/characters.service';
 import { MoviesService } from 'src/app/shared/services/movies.service';
@@ -29,8 +28,7 @@ export class CharactersDetailedPageComponent {
     public moviesService: MoviesService
   ) {
 
-    this.response$ = this.route.params.pipe(
-      switchMap((params: Params) => this.charactersService.getById(params['id'])),
+    this.response$ = this.charactersService.getById(this.route.snapshot.params['id']).pipe(
 
       concatMap((character: ICharacter) => {
         this.character = character;
@@ -43,16 +41,12 @@ export class CharactersDetailedPageComponent {
 
       mergeMap((urlMovie: string) => moviesService.getById(+urlMovie.split('/').slice(-2)[0])),
 
-      scan((acc: IMovie[], movie: IMovie) => {
-        acc.push(movie);
-        return acc;
-      }, new Array<IMovie>),
+      toArray(),
 
       catchError(() => {
-        return new Observable(subscriber => {
         this.errorCatch = true;
-        subscriber.complete;
-      })})
+        return EMPTY;
+      })
     );
   }
 }

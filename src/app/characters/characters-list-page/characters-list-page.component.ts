@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { map, switchMap, concatMap, Observable, mergeMap, catchError } from 'rxjs';
-import { IArrayDataCharacter, ICharacter } from 'src/app/shared/interfaces/characters';
+import { map, switchMap, concatMap, Observable, mergeMap, catchError, range, EMPTY } from 'rxjs';
+import { ICharacter } from 'src/app/shared/interfaces/characters';
 import { CharactersService } from 'src/app/shared/services/characters.service';
 
 const DISPLAYED_NUMBER_OF_CARDS = 18;
@@ -16,12 +16,10 @@ export class CharactersListPageComponent {
 
   currentPage: number = 1;
   maxPages!: number;
-  count: number = DISPLAYED_NUMBER_OF_CARDS;
-  loadedNeed: number = 1;
-  loaded: number = 0;
+  loadedNeed!: number;
+  loaded!: number;
   avialablePages: number[] = [];
   characters: ICharacter[] = [];
-  searchArray: ICharacter[] = [];
   response$!: Observable<ICharacter[]>;
 
   from: FormGroup = new FormGroup({
@@ -33,7 +31,6 @@ export class CharactersListPageComponent {
     private route: ActivatedRoute,
     private router: Router
   ) {
-    
     this.response$ = this.route.queryParams
       .pipe(
         concatMap((params: Params) => {
@@ -41,44 +38,34 @@ export class CharactersListPageComponent {
 
           this.avialablePages = [];
           this.characters = [];
-          this.searchArray = [];
-          this.loadedNeed = 1;
           this.loaded = 0;
-          return this.characterService.getInfo();
+
+          return this.characterService.getCount();
         }),
-        
-        switchMap((characters: IArrayDataCharacter) => {
-          this.count = characters.count;
-          this.characterService.setCount(this.count);
-          this.maxPages = Math.ceil(this.count / DISPLAYED_NUMBER_OF_CARDS);
 
-          for (let i = 1; i <= this.maxPages; i++)
-            this.avialablePages.push(i);
+        switchMap((count: number) => {
+          this.maxPages = Math.ceil(count / DISPLAYED_NUMBER_OF_CARDS);
 
-          let to = +this.currentPage * DISPLAYED_NUMBER_OF_CARDS;
-          let from = to - (DISPLAYED_NUMBER_OF_CARDS - 1);
-          this.characters = [];
-          if (to > this.count) to = this.count;
-          this.loadedNeed = to - from + 1;
+          for (let i = 1; i <= this.maxPages; i++) this.avialablePages.push(i);
 
-          if (this.loadedNeed < 1) {
-            this.loadedNeed = 1;
-            this.router.navigate(['/characters'], { queryParams: { page: this.maxPages } })
-          } else if (from < 1) {
-            this.loadedNeed = 1;
-            this.router.navigate(['/characters'], { queryParams: { page: 1 } })
+          if (!this.avialablePages.find(x => x == this.currentPage)) {
+            this.router.navigate(['/characters'], { queryParams: { page: 1 } });
+            return EMPTY;
           }
-          return new Observable<number>(sub => { for (let i: number = from; i <= to; i++) sub.next(i); });
+          
+          let to: number = +this.currentPage * DISPLAYED_NUMBER_OF_CARDS;
+          let from: number = to - (DISPLAYED_NUMBER_OF_CARDS - 1);
+          this.loadedNeed = (to > count ? count : to) - from + 1;
+
+          return range(from, this.loadedNeed);
         }),
 
         mergeMap((id: number): Observable<ICharacter> => {
           return this.characterService.getById(id)
             .pipe(
               catchError(() => {
-                return new Observable<any>((sub) => {
-                  this.loaded++;
-                  sub.complete;
-                });
+                this.loaded++;
+                return EMPTY;
               })
             );
         }),
@@ -90,5 +77,4 @@ export class CharactersListPageComponent {
         })
       );
   }
-
 }

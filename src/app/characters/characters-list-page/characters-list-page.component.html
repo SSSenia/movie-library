@@ -1,4 +1,5 @@
-<div class="searchModule">
+<div *ngIf="response$ | async as response; else getAmountPages">
+    <div class="searchModule">
     <form [formGroup]="from">
         <input class="searchInput" type="text" placeholder="Search character" formControlName="search">
     </form>
@@ -8,8 +9,6 @@
         </div>
     </div>
 </div>
-
-<div *ngIf="response$ | async as response; else getAmountPages">
     <div *ngIf="loadedNeed == loaded; else loading">
         <div class="list">
             <app-character *ngFor="let character of response" [character]="character">

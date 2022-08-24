@@ -68,13 +68,13 @@
             <div class="section-name">Films</div>
             <div class="films">
                 <div class="film" *ngFor="let movie of response">
-                    <a [routerLink]="['/movies', movie | parseIdFromUrl]">
+                    <a [routerLink]="['/movies', movie | parseIdFromUrl]" *ngIf="movie.posterObservable | async as poster">
                         <div class="card">
                             <div class="card-name">
                                 <p>{{movie.title}}</p>
                             </div>
-                            <img [src]="'https://image.tmdb.org/t/p/w500'+ (movie.posterObservable | async)"
-                                onerror="this.src=imagesUrl+'/big-placeholder.jpg';">
+                            <img [src]="'https://image.tmdb.org/t/p/w500'+ poster"
+                                onerror="this.src=environment.imagesUrl+'/big-placeholder.jpg';">
                         </div>
                     </a>
                 </div>
