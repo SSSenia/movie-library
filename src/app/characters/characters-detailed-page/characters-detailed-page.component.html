@@ -1,8 +1,7 @@
 <div *ngIf="!errorCatch; else error">
-    <div *ngIf="character; else loading" class="wrapper">
+    <div *ngIf="response$ | async as response; else loading" class="wrapper">
         <section class="section-info">
-            <img class="character-img"
-                [src]="'https://starwars-visualguide.com/assets/img/characters/'+character.url.slice(29, -1)+'.jpg'">
+            <img class="character-img" [src]="imagesUrl+'/characters/'+(character | parseIdFromUrl) +'.jpg'">
             <div class="character-name">{{character.name}}</div>
             <div class="character-info">
                 <div class="property-names">
@@ -25,10 +24,9 @@
                 </div>
             </div>
         </section>
-        <section *ngIf="loadedPlanet; else loading" class="section-planet">
+        <section class="section-planet">
             <div class="section-name">Homeworld</div>
-            <img class="planet-img"
-                [src]="'https://starwars-visualguide.com/assets/img/planets/'+planet.url.slice(30, -1)+'.jpg'"
+            <img class="planet-img" [src]="imagesUrl + '/planets/'+ (planet | parseIdFromUrl) + '.jpg'"
                 onerror="this.src='https://starwars-visualguide.com/assets/img/big-placeholder.jpg';">
             <div class="planet-name">{{planet.name}}</div>
             <div class="planet-info">
@@ -66,17 +64,17 @@
                 </div>
             </div>
         </section>
-        <section *ngIf="loadedFilms == character.films.length*2; else loading" class="section-films">
+        <section class="section-films">
             <div class="section-name">Films</div>
             <div class="films">
-                <div class="film" *ngFor="let movie of movies">
-                    <a [routerLink]="['/movie', movie.url.slice(28, -1)]">
+                <div class="film" *ngFor="let movie of response">
+                    <a [routerLink]="['/movies', movie | parseIdFromUrl]" *ngIf="movie.posterObservable | async as poster">
                         <div class="card">
                             <div class="card-name">
                                 <p>{{movie.title}}</p>
                             </div>
-                            <img [src]="'https://image.tmdb.org/t/p/w500'+ movie.results[0].poster_path"
-                                onerror="this.src='https://starwars-visualguide.com/assets/img/big-placeholder.jpg';">
+                            <img [src]="'https://image.tmdb.org/t/p/w500'+ poster"
+                                onerror="this.src=environment.imagesUrl+'/big-placeholder.jpg';">
                         </div>
                     </a>
                 </div>

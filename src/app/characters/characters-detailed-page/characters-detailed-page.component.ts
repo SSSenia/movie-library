@@ -1,9 +1,12 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
-import { ICharacter, IMovie, IPlanet } from 'src/app/shared/interfaces';
+import { ActivatedRoute } from '@angular/router';
+import { catchError, concatMap, EMPTY, from, map, mergeMap, Observable, toArray } from 'rxjs';
+import { ICharacter } from 'src/app/shared/interfaces/characters';
+import { IPlanet } from 'src/app/shared/interfaces/others';
 import { CharactersService } from 'src/app/shared/services/characters.service';
 import { MoviesService } from 'src/app/shared/services/movies.service';
 import { OthersService } from 'src/app/shared/services/others.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-characters-detailed-page',
@@ -12,46 +15,38 @@ import { OthersService } from 'src/app/shared/services/others.service';
 })
 export class CharactersDetailedPageComponent {
 
-  movies: Array<IMovie> = [];
   character!: ICharacter;
   planet!: IPlanet;
-  loadedFilms: number  = 0;
-  loadedPlanet: boolean = false;
   errorCatch: boolean = false;
+  imagesUrl: string = environment.imagesUrl;
+  response$!: Observable<any>;
 
   constructor(
     private route: ActivatedRoute,
     private charactersService: CharactersService,
     private othersService: OthersService,
-    private moviesService: MoviesService
+    public moviesService: MoviesService
   ) {
-    this.route.params.subscribe((params: Params) => {
-      this.charactersService.getById(params['id']).subscribe((character: ICharacter) => {
+
+    this.response$ = this.charactersService.getById(this.route.snapshot.params['id']).pipe(
+
+      concatMap((character: ICharacter) => {
         this.character = character;
+        return this.othersService.getPlanetByAdress(character.homeworld);
+      }),
 
-        this.othersService.getPlanetByAdress(this.character.homeworld).subscribe((planet: IPlanet) => {
-          this.planet = planet;
-          this.loadedPlanet = true;
-        });
+      map((planet: IPlanet) => this.planet = planet),
 
-        for (let i of this.character.films) {
-          othersService.getMovieByAdress(i).subscribe((movie: IMovie) => {
-            this.loadedFilms++;
-            this.movies.push(movie);
+      concatMap(() => from(this.character.films)),
 
-            if (this.loadedFilms == this.character.films.length)
-              for (let i = 0; i < this.movies.length; i++) {
-                moviesService.getPoster(this.movies[i].title).subscribe((search) => {
-                  this.movies[i].results = search.results;
-                  this.loadedFilms++;
-                });
-              }
-          });
-        }
-      },
-      (error)=>{
+      mergeMap((urlMovie: string) => moviesService.getById(+urlMovie.split('/').slice(-2)[0])),
+
+      toArray(),
+
+      catchError(() => {
         this.errorCatch = true;
-      });
-    });
+        return EMPTY;
+      })
+    );
   }
 }

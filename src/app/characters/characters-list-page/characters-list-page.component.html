@@ -1,27 +1,28 @@
-<div class="searchModule">
-    <input class="searchInput" type="text" placeholder="Search character" [(ngModel)]="search">
-    <div class="searchResults" *ngIf="(searchArray | searchCharacters:search).length">
-        <div class="searchResult" *ngFor="let character of searchArray | searchCharacters:search">
-            <a [routerLink]="['/character', character.url.slice(29, -1)]">{{character.name}}</a>
+<div *ngIf="response$ | async as response; else getAmountPages">
+    <div class="searchModule">
+    <form [formGroup]="from">
+        <input class="searchInput" type="text" placeholder="Search character" formControlName="search">
+    </form>
+    <div class="searchResults" *ngIf="(characters | searchCharacters: from.value.search).length">
+        <div class="searchResult" *ngFor="let character of characters | searchCharacters: from.value.search">
+            <a [routerLink]="['/characters', character | parseIdFromUrl]">{{character.name}}</a>
         </div>
     </div>
 </div>
-
-<div  *ngIf="loadedNeed != 0; else getAmountPages">
     <div *ngIf="loadedNeed == loaded; else loading">
         <div class="list">
-            <app-character *ngFor="let character of characters" [character]="character">
+            <app-character *ngFor="let character of response" [character]="character">
             </app-character>
         </div>
-        
+
         <nav class="navigation">
             <button [disabled]="+currentPage == 1" [routerLink]="['/characters']" [queryParams]="{page: 1}">
                 First
             </button>
-            <button [disabled]="+currentPage == 1" [routerLink]="['/characters']" [queryParams]="{page: +currentPage-1}">
+            <button [disabled]="+currentPage == 1" [routerLink]="['/characters']"
+                [queryParams]="{page: +currentPage-1}">
                 Prev page
             </button>
-        
             <div class="pages" *ngFor="let page of avialablePages">
                 <button
                     class="page"

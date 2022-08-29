@@ -1,9 +1,8 @@
-<!-- getting id https://swapi.dev/api/films/>28>1<-1</ -->
-<a [routerLink]="['/movie', movie.url.slice(28, -1)]">
+<a [routerLink]="['/movies', movie | parseIdFromUrl]" *ngIf="movie.posterObservable | async as posterObservable">
     <div class="card">
         <div class="name">
             <p>{{movie.title}}</p>
         </div>
-        <img [src]="'https://image.tmdb.org/t/p/w500'+ movie.results[0].poster_path" *ngIf="movie.results">
+        <img [src]="'https://image.tmdb.org/t/p/w500'+posterObservable">
     </div>
 </a>

@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { ICharacter } from '../../interfaces';
+import { environment } from 'src/environments/environment';
+import { ICharacter } from '../../interfaces/characters';
 
 @Component({
   selector: 'app-character',
@@ -9,6 +10,8 @@ import { ICharacter } from '../../interfaces';
 export class CharacterComponent {
 
   @Input() character!: ICharacter;
+
+  imagesUrl: string = environment.imagesUrl;
 
   constructor() { }
 }

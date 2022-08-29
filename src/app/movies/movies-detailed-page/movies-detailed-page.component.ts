@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
-import { ICharacter, IMovie } from 'src/app/shared/interfaces';
+import { ActivatedRoute } from '@angular/router';
+import { concatMap, from, mergeMap, Observable, catchError, EMPTY, toArray } from 'rxjs';
+import { IMovie } from 'src/app/shared/interfaces/movies';
 import { MoviesService } from 'src/app/shared/services/movies.service';
 import { OthersService } from 'src/app/shared/services/others.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-movies-detailed-page',
@@ -12,31 +14,33 @@ import { OthersService } from 'src/app/shared/services/others.service';
 export class MoviesDetailedPageComponent {
 
   movie!: IMovie;
-  characters: Array<ICharacter> = [];
   errorCatch: boolean = false;
+  imagesUrl: string = environment.imagesUrl;
+  response$!: Observable<any>;
 
   constructor(
     private route: ActivatedRoute,
     private moviesService: MoviesService,
     private othersService: OthersService
   ) {
-    this.route.params.subscribe((params: Params) => {
-      this.moviesService.getById(params['id']).subscribe((movie: IMovie) => {
+
+    this.response$ = this.moviesService.getById(this.route.snapshot.params['id']).pipe(
+
+      concatMap((movie: IMovie) => {
         this.movie = movie;
+        return from(this.movie.characters)
+      }),
 
-        moviesService.getPoster(this.movie.title!).subscribe((search) => {
-          this.movie.results = search.results;
-        });
+      mergeMap((character: string) => {
+        return this.othersService.getCharacterByAdress(character);
+      }),
+      
+      toArray(),
 
-        for (let character of this.movie.characters!) {
-          this.othersService.getCharacterByAdress(character).subscribe((character: ICharacter) => {
-            this.characters.push(character);
-          });
-        }
-      },
-      (error)=>{
+      catchError(() => {
         this.errorCatch = true;
-      });
-    });
+        return EMPTY;
+      })
+    );
   }
 }

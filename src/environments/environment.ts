@@ -3,6 +3,8 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
+  swapiUrl: 'https://swapi.dev/api',
+  imagesUrl: 'https://starwars-visualguide.com/assets/img',
   production: false
 };
 

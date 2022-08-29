@@ -1,63 +1,58 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { IArrayDataCharacter, ICharacter } from '../interfaces';
+import { map, mergeMap, Observable, of, range, scan } from 'rxjs';
+import { environment } from 'src/environments/environment';
+import { IArrayDataCharacter, ICharacter } from '../interfaces/characters';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CharactersService {
-
-  parsedArray: Array<ICharacter> = [];
+  parsedArray: ICharacter[] = [];
   count: number = 0;
-  loaded = 0;
 
   constructor(
     private http: HttpClient
   ) { }
 
-  setCount(count: number): void {
-    this.count = count;
-  }
-
-  setItem(item: ICharacter): void {
-    if (!this.parsedArray.find(x => x.id == item.id))
-      this.parsedArray.push(item);
-
+  setItem(character: ICharacter): void {
+    if (!this.parsedArray.find(item => item.id == character.id)) this.parsedArray.push(character);
   }
 
   getAll(): Observable<ICharacter[]> {
-    return new Observable((subscriber) => {
-      for (let i: number = 1; i <= this.count; i++) {
-        if (!this.parsedArray.find(x => x.id == i))
-          this.getById(i)
-            .subscribe(
-              (character) => {
-                character.id = i;
-                this.parsedArray.push(character);
-                this.loaded++;
-                subscriber.next(this.parsedArray)
-              },
-              (error) => {
-                this.loaded++;
-                subscriber.next(this.parsedArray)
-              }
-            );
-        else {
-          this.loaded++;
-          subscriber.next(this.parsedArray)
-        }
-      }
-    })
+    return range(1, this.count)
+      .pipe(
+        mergeMap((id: number) => {
+          return this.getById(id)
+        }),
+        scan((acc: ICharacter[], character: ICharacter) => {
+          acc.push(character);
+          return acc;
+        }, new Array<ICharacter>)
+      );
   }
 
-  getInfo(): Observable<IArrayDataCharacter> {
-    return this.http.get<IArrayDataCharacter>('https://swapi.dev/api/people/');
+  getCount(): Observable<number> {
+    if (this.count) return of(this.count);
+    return this.http.get<IArrayDataCharacter>(`${environment.swapiUrl}/people/`)
+      .pipe(
+        map((dataCharacters: IArrayDataCharacter) => {
+          this.count = dataCharacters.count;
+          return dataCharacters.count;
+        })
+      );
   }
 
   getById(id: number): Observable<ICharacter> {
-    let element = this.parsedArray.find(x => x.id == id)
-    if (element) return new Observable(subscriber => subscriber.next(element));
-    else return this.http.get<ICharacter>(`https://swapi.dev/api/people/${id}/`);
+    let item = this.parsedArray.find(character => character.id == id)
+    if (item) return of(item);
+    return this.http.get<ICharacter>(`${environment.swapiUrl}/people/${id}`)
+      .pipe(
+        map((character: ICharacter) => {
+          character.id = +character.url.split('/').slice(-2)[0];
+          this.setItem(character);
+          return character;
+        })
+      )
   }
 }
