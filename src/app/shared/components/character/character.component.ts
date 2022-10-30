@@ -11,7 +11,7 @@ export class CharacterComponent {
 
   @Input() character!: ICharacter;
 
-  imagesUrl: string = environment.imagesUrl;
+  public imagesUrl: string = environment.imagesUrl;
 
   constructor() { }
 }

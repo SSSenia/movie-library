@@ -1,7 +1,7 @@
-<div *ngIf="!errorCatch; else error">
+<div *ngIf="isFound$ | async; else error">
     <div *ngIf="response$ | async as response; else loading" class="wrapper">
-        <section class="section-info" *ngIf="movie.posterObservable | async as posterObservable">
-            <img class="film-img" [src]="'https://image.tmdb.org/t/p/w500'+posterObservable">
+        <section class="section-info" *ngIf="poster$ | async as poster">
+            <img class="film-img" [src]="'https://image.tmdb.org/t/p/w500'+poster">
             <div class="film-name">{{movie.title}}</div>
             <div class="film-info">
                 <div class="split">
@@ -39,8 +39,9 @@
         <section class="section-characters">
             <div class="section-name">Characters</div>
             <div class="characters-list">
-                <div class="character-item" *ngFor="let character of response">
-                    <a [routerLink]="['/characters', character | parseIdFromUrl ]" class="card">
+                <div class="character-item" *ngFor="let character$ of characters">
+                    <a *ngIf="character$ | async as character"
+                        [routerLink]="['/characters', character | parseIdFromUrl ]" class="card">
                         <div class="name">
                             <p>{{character.name}}</p>
                         </div>

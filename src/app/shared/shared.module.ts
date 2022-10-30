@@ -5,19 +5,22 @@ import { CharacterComponent } from "./components/character/character.component";
 import { MovieComponent } from "./components/movie/movie.component";
 import { ParseIdFromUrlPipe } from "./pipes/parse-id-from-url.pipe";
 import { SearchPipe } from "./pipes/search.pipe";
+import { SortingPipe } from "./pipes/sorting.pipe";
 
 @NgModule({
     declarations: [
         CharacterComponent,
         MovieComponent,
         SearchPipe,
-        ParseIdFromUrlPipe
+        ParseIdFromUrlPipe,
+        SortingPipe
     ],
-    exports:[
+    exports: [
         CharacterComponent,
         MovieComponent,
         SearchPipe,
         ParseIdFromUrlPipe,
+        SortingPipe,
         CommonModule
     ],
     imports: [

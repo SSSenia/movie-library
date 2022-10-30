@@ -15,8 +15,13 @@ export interface IMovie {
     title: string,
     url: string,
     vehicles: string[],
-    posterObservable: Observable<string>,
+    poster$: Observable<string | null>,
     poster: string
+}
+
+export interface IPoster {
+    imageUrl: string;
+    movieTitle: string;
 }
 
 export interface IArrayDataMovie {

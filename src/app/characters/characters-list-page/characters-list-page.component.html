@@ -3,15 +3,15 @@
     <form [formGroup]="from">
         <input class="searchInput" type="text" placeholder="Search character" formControlName="search">
     </form>
-    <div class="searchResults" *ngIf="(characters | searchCharacters: from.value.search).length">
-        <div class="searchResult" *ngFor="let character of characters | searchCharacters: from.value.search">
+    <div class="searchResults" *ngIf="((list$ | async)! | searchCharacters: from.value.search).length">
+        <div class="searchResult" *ngFor="let character of (list$ | async)! | searchCharacters: from.value.search">
             <a [routerLink]="['/characters', character | parseIdFromUrl]">{{character.name}}</a>
         </div>
     </div>
 </div>
-    <div *ngIf="loadedNeed == loaded; else loading">
+    <div *ngIf="(loadedNeed$ | async) === (loadedNow$ | async); else loading">
         <div class="list">
-            <app-character *ngFor="let character of response" [character]="character">
+            <app-character *ngFor="let character of (list$ | async)! | sortingCharacters" [character]="character">
             </app-character>
         </div>
 
@@ -48,5 +48,5 @@
     <p class="loading">Conneting to server...</p>
 </ng-template>
 <ng-template #loading>
-    <p class="loading">Loading... {{loaded}} of {{loadedNeed}}</p>
+    <p class="loading">Loading... {{loadedNow$ | async}} of {{loadedNeed$ | async}}</p>
 </ng-template>

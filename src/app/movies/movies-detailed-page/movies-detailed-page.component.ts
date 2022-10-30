@@ -1,9 +1,13 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { concatMap, from, mergeMap, Observable, catchError, EMPTY, toArray } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { from, Observable, catchError, EMPTY, map, switchMap } from 'rxjs';
+import { charactersActions } from 'src/app/shared/actions/characters.actions';
+import { moviesActions } from 'src/app/shared/actions/movies.actions';
+import { ICharacter } from 'src/app/shared/interfaces/characters';
 import { IMovie } from 'src/app/shared/interfaces/movies';
-import { MoviesService } from 'src/app/shared/services/movies.service';
-import { OthersService } from 'src/app/shared/services/others.service';
+import { charactersSelector } from 'src/app/shared/selectors/characters.selectors';
+import { moviesSelector } from 'src/app/shared/selectors/movies.selectors';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -13,34 +17,37 @@ import { environment } from 'src/environments/environment';
 })
 export class MoviesDetailedPageComponent {
 
-  movie!: IMovie;
-  errorCatch: boolean = false;
-  imagesUrl: string = environment.imagesUrl;
-  response$!: Observable<any>;
+  public movie!: IMovie;
+  public imagesUrl: string = environment.imagesUrl;
+  public characters: Observable<ICharacter | null>[] = [];
+
+  public response$!: Observable<boolean>;
+  public isFound$: Observable<boolean> = this.store.select(moviesSelector.getIsFound);
+  public poster$!: Observable<string | null>;
 
   constructor(
     private route: ActivatedRoute,
-    private moviesService: MoviesService,
-    private othersService: OthersService
+    private store: Store
   ) {
+    this.store.dispatch(moviesActions.loadById({ id: this.route.snapshot.params['id'] }));
+    this.response$ = this.store.select(moviesSelector.getById(this.route.snapshot.params['id'])).pipe(
 
-    this.response$ = this.moviesService.getById(this.route.snapshot.params['id']).pipe(
-
-      concatMap((movie: IMovie) => {
+      switchMap((movie: IMovie | null) => {
+        if (!movie) return EMPTY;
         this.movie = movie;
+        this.poster$ = this.store.select(moviesSelector.getImagePosterByTitle(movie.title));
+        this.characters = [];
         return from(this.movie.characters)
       }),
 
-      mergeMap((character: string) => {
-        return this.othersService.getCharacterByAdress(character);
+      map((character: string) => {
+        const id = +character.split('/').slice(-2)[0];
+        this.store.dispatch(charactersActions.loadById({ id }))
+        this.characters.push(this.store.select(charactersSelector.getById(id)));
+        return true;
       }),
-      
-      toArray(),
 
-      catchError(() => {
-        this.errorCatch = true;
-        return EMPTY;
-      })
+      catchError(() => EMPTY)
     );
   }
 }
