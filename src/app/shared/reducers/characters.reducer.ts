@@ -9,6 +9,7 @@ export interface CharactersState {
     loadedNow: number;
     loadedNeed: number;
     isFound: boolean;
+    request: string;
 }
 
 export const initialState: CharactersState = {
@@ -17,7 +18,8 @@ export const initialState: CharactersState = {
     loadedNow: 0,
     loadedNeed: 0,
     count: 0,
-    isFound: true
+    isFound: true,
+    request: ''
 };
 
 export const CharactersReducer = createReducer(
@@ -48,5 +50,9 @@ export const CharactersReducer = createReducer(
     on(charactersActions.notFound, (state) => ({
         ...state,
         isFound: false
+    })),
+    on(charactersActions.setRequest, (state, {request})=>({
+        ...state,
+        request: request
     }))
 );

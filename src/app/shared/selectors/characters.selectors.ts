@@ -1,4 +1,6 @@
+import { state } from "@angular/animations";
 import { createFeatureSelector, createSelector } from "@ngrx/store";
+import { ICharacter } from "../interfaces/characters";
 import { CharactersState } from "../reducers/characters.reducer";
 
 export const featureSelector = createFeatureSelector<CharactersState>('characters');
@@ -27,9 +29,15 @@ export const charactersSelector = {
         featureSelector,
         state => state.isFound
     ),
+    search: createSelector(
+        featureSelector,
+        state => !state.request.trim() ?
+            [] : state.parsedArray
+                .filter((character: ICharacter) => character.name.toLowerCase().includes(state.request.toLowerCase()))
+    ),
     getById: (id: number) => createSelector(
         featureSelector,
-        (state) => {
+        state => {
             const search = state.parsedArray.find(c => c.id === id)
             return search ? search : null;
         }

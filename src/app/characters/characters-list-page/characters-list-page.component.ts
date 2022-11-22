@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { Store } from '@ngrx/store';
-import { switchMap, Observable, map } from 'rxjs';
+import { props, Store } from '@ngrx/store';
+import { switchMap, Observable, map, tap } from 'rxjs';
 import { charactersActions } from 'src/app/shared/actions/characters.actions';
 import { ICharacter } from 'src/app/shared/interfaces/characters';
 import { charactersSelector } from 'src/app/shared/selectors/characters.selectors';
@@ -12,7 +12,8 @@ const DISPLAYED_NUMBER_OF_CARDS = 18;
 @Component({
   selector: 'app-characters-list-page',
   templateUrl: './characters-list-page.component.html',
-  styleUrls: ['./characters-list-page.component.scss']
+  styleUrls: ['./characters-list-page.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CharactersListPageComponent {
 
@@ -21,19 +22,22 @@ export class CharactersListPageComponent {
   public avialablePages: number[] = [];
 
   public response$!: Observable<boolean>;
+  public search$: Observable<ICharacter[]> = this.store.select(charactersSelector.search);
   public loadedNow$: Observable<number> = this.store.select(charactersSelector.loadedNow);
   public loadedNeed$: Observable<number> = this.store.select(charactersSelector.loadedNeed);
   public list$: Observable<ICharacter[]> = this.store.select(charactersSelector.list);
+  public requestChanges$: Observable<string | null>;
 
-  public from: FormGroup = new FormGroup({
-    search: new FormControl('')
-  });
+  public request = new FormControl('');
 
   constructor(
     private store: Store,
     private route: ActivatedRoute,
     private router: Router
   ) {
+    this.requestChanges$ = this.request.valueChanges.pipe(
+      tap((value) => this.store.dispatch(charactersActions.setRequest({ request: value == null ? '' : value })))
+    );
     this.store.dispatch(charactersActions.loadCount());
     this.response$ = this.route.queryParams
       .pipe(

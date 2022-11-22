@@ -1,11 +1,11 @@
 <div *ngIf="response$ | async as response; else getAmountPages">
     <div class="searchModule">
-    <form [formGroup]="from">
-        <input class="searchInput" type="text" placeholder="Search character" formControlName="search">
-    </form>
-    <div class="searchResults" *ngIf="((list$ | async)! | searchCharacters: from.value.search).length">
-        <div class="searchResult" *ngFor="let character of (list$ | async)! | searchCharacters: from.value.search">
-            <a [routerLink]="['/characters', character | parseIdFromUrl]">{{character.name}}</a>
+    <input class="searchInput" type="text" placeholder="Search character" [formControl]="request">
+    <div *ngIf="requestChanges$ | async">
+        <div class="searchResults" *ngIf="search$ | async as search">
+            <div class="searchResult" *ngFor="let character of search">
+                <a [routerLink]="['/characters', character | parseIdFromUrl]">{{character.name}}</a>
+            </div>
         </div>
     </div>
 </div>

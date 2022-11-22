@@ -6,6 +6,10 @@ export const charactersActions = {
         '[Characters] Set Item',
         props<{ character: ICharacter }>()
     ),
+    setRequest: createAction(
+        '[Characters] Set Request',
+        props<{ request: string }>()
+    ),
     loadById: createAction(
         '[Characters] Load By Id',
         props<{ id: number }>()
