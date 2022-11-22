@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { from, Observable, catchError, EMPTY, map, switchMap } from 'rxjs';
@@ -13,9 +13,10 @@ import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-movies-detailed-page',
   templateUrl: './movies-detailed-page.component.html',
-  styleUrls: ['./movies-detailed-page.component.scss']
+  styleUrls: ['./movies-detailed-page.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MoviesDetailedPageComponent {
+export class MoviesDetailedPageComponent implements OnInit {
 
   public movie!: IMovie;
   public imagesUrl: string = environment.imagesUrl;
@@ -28,7 +29,9 @@ export class MoviesDetailedPageComponent {
   constructor(
     private route: ActivatedRoute,
     private store: Store
-  ) {
+  ) { }
+
+  public ngOnInit(): void {
     this.store.dispatch(moviesActions.loadById({ id: this.route.snapshot.params['id'] }));
     this.response$ = this.store.select(moviesSelector.getById(this.route.snapshot.params['id'])).pipe(
 

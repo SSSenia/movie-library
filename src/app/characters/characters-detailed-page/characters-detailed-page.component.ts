@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { catchError, concatMap, EMPTY, from, map, Observable } from 'rxjs';
@@ -16,9 +16,10 @@ import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-characters-detailed-page',
   templateUrl: './characters-detailed-page.component.html',
-  styleUrls: ['./characters-detailed-page.component.scss']
+  styleUrls: ['./characters-detailed-page.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CharactersDetailedPageComponent {
+export class CharactersDetailedPageComponent implements OnInit {
 
   public character!: ICharacter;
   public imagesUrl: string = environment.imagesUrl;
@@ -31,7 +32,9 @@ export class CharactersDetailedPageComponent {
   constructor(
     private store: Store,
     private route: ActivatedRoute
-  ) {
+  ) { }
+
+  public ngOnInit(): void {
     this.store.dispatch(charactersActions.loadById({ id: this.route.snapshot.params['id'] }));
 
     this.response$ = this.store.select<ICharacter[]>(charactersSelector.getParsedArray).pipe(

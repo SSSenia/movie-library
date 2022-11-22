@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { moviesActions } from 'src/app/shared/actions/movies.actions';
@@ -8,13 +8,16 @@ import { moviesSelector } from 'src/app/shared/selectors/movies.selectors';
 @Component({
   selector: 'app-movies-list-page',
   templateUrl: './movies-list-page.component.html',
-  styleUrls: ['./movies-list-page.component.scss']
+  styleUrls: ['./movies-list-page.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MoviesListPageComponent {
+export class MoviesListPageComponent implements OnInit {
 
   public response$: Observable<IArrayDataMovie | undefined> = this.store.select(moviesSelector.getFullData);
 
-  constructor(private store: Store) {
+  constructor(private store: Store) { }
+
+  public ngOnInit(): void {
     this.store.dispatch(moviesActions.loadAll());
   }
 }

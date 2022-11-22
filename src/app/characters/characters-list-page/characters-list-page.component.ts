@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { props, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { switchMap, Observable, map, tap } from 'rxjs';
 import { charactersActions } from 'src/app/shared/actions/characters.actions';
 import { ICharacter } from 'src/app/shared/interfaces/characters';
@@ -15,18 +15,18 @@ const DISPLAYED_NUMBER_OF_CARDS = 18;
   styleUrls: ['./characters-list-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CharactersListPageComponent {
+export class CharactersListPageComponent implements OnInit {
 
   public currentPage: number = 1;
   public maxPages!: number;
   public avialablePages: number[] = [];
 
   public response$!: Observable<boolean>;
+  public requestChanges$!: Observable<string | null>;
   public search$: Observable<ICharacter[]> = this.store.select(charactersSelector.search);
   public loadedNow$: Observable<number> = this.store.select(charactersSelector.loadedNow);
   public loadedNeed$: Observable<number> = this.store.select(charactersSelector.loadedNeed);
   public list$: Observable<ICharacter[]> = this.store.select(charactersSelector.list);
-  public requestChanges$: Observable<string | null>;
 
   public request = new FormControl('');
 
@@ -34,7 +34,9 @@ export class CharactersListPageComponent {
     private store: Store,
     private route: ActivatedRoute,
     private router: Router
-  ) {
+  ) { }
+
+  public ngOnInit(): void {
     this.requestChanges$ = this.request.valueChanges.pipe(
       tap((value) => this.store.dispatch(charactersActions.setRequest({ request: value == null ? '' : value })))
     );
