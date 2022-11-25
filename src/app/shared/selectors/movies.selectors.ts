@@ -3,27 +3,21 @@ import { MoviesState } from "../reducers/movies.reducer";
 
 export const featureSelector = createFeatureSelector<MoviesState>('movies');
 export const moviesSelector = {
-    getFullData: createSelector(
+    list: createSelector(
         featureSelector,
-        (state) => state.fullData
+        state => state.currentList
+    ),
+    getAll: createSelector(
+        featureSelector,
+        (state) => state.movies
+    ),
+    getIsAllLoaded: createSelector(
+        featureSelector,
+        (state) => state.isAllLoaded
     ),
     getIsFound: createSelector(
         featureSelector,
         (state) => state.isFound
-    ),
-    getPosterByTitle: (title: string) => createSelector(
-        featureSelector,
-        (state) => {
-            const search = state.posters.find(poster => poster.movieTitle === title);
-            return search ? search : null;
-        }
-    ),
-    getImagePosterByTitle: (title: string) => createSelector(
-        featureSelector,
-        (state) => {
-            const search = state.posters.find(poster => poster.movieTitle === title);
-            return search ? search.imageUrl : null;
-        }
     ),
     getById: (id: number) => createSelector(
         featureSelector,

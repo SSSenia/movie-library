@@ -1,5 +1,5 @@
 import { createAction, props } from "@ngrx/store";
-import { IArrayDataMovie, IMovie, IPoster } from "../interfaces/movies";
+import { IMovie } from "../interfaces/movies";
 
 export const moviesActions = {
     loadAll: createAction('[Movies] Load All'),
@@ -8,20 +8,19 @@ export const moviesActions = {
         props<{ id: number }>()
     ),
     loadedAll: createAction(
-        '[Movies] Loaded All',
-        props<{ fullData: IArrayDataMovie }>()
+        '[Movies] Loaded All'
     ),
     loadedById: createAction(
         '[Movies] Loaded By Id',
         props<IMovie>()
     ),
-    loadPoster: createAction(
-        '[Movies] Load Poster Of Film',
-        props<IMovie>()
+    loadCurrentListFromArray: createAction(
+        '[Characters] Load Current List',
+        props<{ request: string[] }>()
     ),
-    loadedPoster: createAction(
-        '[Movies] Loaded Poster Of Film',
-        props<IPoster>()
+    loadedCharacterToCurrentList: createAction(
+        '[Characters] Current Range Loaded',
+        props<{ movie: IMovie | null }>()
     ),
     notFound: createAction('[Movies] Movie Not Found'),
     found: createAction('[Movies] Movie found')

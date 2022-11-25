@@ -21,12 +21,11 @@ import { environment } from 'src/environments/environment';
 })
 export class CharactersDetailedPageComponent implements OnInit {
 
-  public character!: ICharacter;
   public imagesUrl: string = environment.imagesUrl;
-  public movies: Observable<IMovie | null>[] = [];
 
-  public response$!: Observable<boolean>;
+  public character$!: Observable<ICharacter | undefined>;
   public planet$!: Observable<IPlanet | null>;
+  public movies$: Observable<Array<IMovie | null>> = this.store.select(moviesSelector.list);
   public isFound$: Observable<boolean> = this.store.select(charactersSelector.getIsFound);
 
   constructor(
@@ -35,26 +34,19 @@ export class CharactersDetailedPageComponent implements OnInit {
   ) { }
 
   public ngOnInit(): void {
-    this.store.dispatch(charactersActions.loadById({ id: this.route.snapshot.params['id'] }));
+    const id = +this.route.snapshot.params['id'];
+    this.store.dispatch(moviesActions.loadAll());
+    this.store.dispatch(charactersActions.found());
+    this.store.dispatch(charactersActions.loadById({ id }));
 
-    this.response$ = this.store.select<ICharacter[]>(charactersSelector.getParsedArray).pipe(
-      concatMap((characters: ICharacter[]) => {
-        const search = characters.find(x => x.id == this.route.snapshot.params['id'])
-        if (!search) return EMPTY;
-        this.character = search;
-        this.store.dispatch(othersActions.loadPlanetByAdress({ url: search.homeworld }))
-        this.planet$ = this.store.select(othersSelector.getPlanetByUrl(search.homeworld));
-        return from(this.character.films)
-      }),
-
-      map((urlMovie: string) => {
-        const movieId = +urlMovie.split('/').slice(-2)[0];
-        this.store.dispatch(moviesActions.loadById({ id: movieId }));
-        this.movies.push(this.store.select(moviesSelector.getById(movieId)));
-        return true;
-      }),
-
-      catchError(() => EMPTY)
+    this.character$ = this.store.select<ICharacter | undefined>(charactersSelector.getById(id)).pipe(
+      map((character: ICharacter | undefined) => {
+        if(!character) return undefined;
+        this.store.dispatch(othersActions.loadPlanetByAdress({ url: character.homeworld }))
+        this.store.dispatch(moviesActions.loadCurrentListFromArray({ request: character.films }));
+        this.planet$ = this.store.select(othersSelector.getPlanetByUrl(character.homeworld));
+        return character;
+      })
     );
   }
 }

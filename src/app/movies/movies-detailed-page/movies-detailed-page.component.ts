@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { from, Observable, catchError, EMPTY, map, switchMap } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { charactersActions } from 'src/app/shared/actions/characters.actions';
 import { moviesActions } from 'src/app/shared/actions/movies.actions';
 import { ICharacter } from 'src/app/shared/interfaces/characters';
@@ -18,13 +18,11 @@ import { environment } from 'src/environments/environment';
 })
 export class MoviesDetailedPageComponent implements OnInit {
 
-  public movie!: IMovie;
   public imagesUrl: string = environment.imagesUrl;
-  public characters: Observable<ICharacter | null>[] = [];
 
-  public response$!: Observable<boolean>;
+  public movie$!: Observable<IMovie | null>;
+  public characters$: Observable<Array<ICharacter | null>> = this.store.select(charactersSelector.list);
   public isFound$: Observable<boolean> = this.store.select(moviesSelector.getIsFound);
-  public poster$!: Observable<string | null>;
 
   constructor(
     private route: ActivatedRoute,
@@ -32,25 +30,15 @@ export class MoviesDetailedPageComponent implements OnInit {
   ) { }
 
   public ngOnInit(): void {
-    this.store.dispatch(moviesActions.loadById({ id: this.route.snapshot.params['id'] }));
-    this.response$ = this.store.select(moviesSelector.getById(this.route.snapshot.params['id'])).pipe(
-
-      switchMap((movie: IMovie | null) => {
-        if (!movie) return EMPTY;
-        this.movie = movie;
-        this.poster$ = this.store.select(moviesSelector.getImagePosterByTitle(movie.title));
-        this.characters = [];
-        return from(this.movie.characters)
-      }),
-
-      map((character: string) => {
-        const id = +character.split('/').slice(-2)[0];
-        this.store.dispatch(charactersActions.loadById({ id }))
-        this.characters.push(this.store.select(charactersSelector.getById(id)));
-        return true;
-      }),
-
-      catchError(() => EMPTY)
+    const id = this.route.snapshot.params['id'];
+    this.store.dispatch(moviesActions.found());
+    this.store.dispatch(moviesActions.loadById({ id }));
+    this.movie$ = this.store.select(moviesSelector.getById(id)).pipe(
+      map((movie: IMovie | null) => {
+        if (!movie) return null;
+        this.store.dispatch(charactersActions.loadCurrentListFromArray({ request: movie.characters, key: 'movie' + id }));
+        return movie
+      })
     );
   }
 }

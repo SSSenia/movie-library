@@ -4,20 +4,23 @@ import { RouterModule } from "@angular/router";
 import { CharacterComponent } from "./components/character/character.component";
 import { MovieComponent } from "./components/movie/movie.component";
 import { ParseIdFromUrlPipe } from "./pipes/parse-id-from-url.pipe";
-import { SortingPipe } from "./pipes/sorting.pipe";
+import { SortingCharactersPipe } from "./pipes/sortingCharacters.pipe";
+import { SortingMoviesPipe } from "./pipes/sortingMovies.pipe";
 
 @NgModule({
     declarations: [
         CharacterComponent,
         MovieComponent,
         ParseIdFromUrlPipe,
-        SortingPipe
+        SortingCharactersPipe,
+        SortingMoviesPipe
     ],
     exports: [
         CharacterComponent,
         MovieComponent,
         ParseIdFromUrlPipe,
-        SortingPipe,
+        SortingCharactersPipe,
+        SortingMoviesPipe,
         CommonModule
     ],
     imports: [

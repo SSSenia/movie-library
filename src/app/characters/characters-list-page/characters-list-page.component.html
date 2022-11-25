@@ -2,9 +2,11 @@
     <div class="searchModule">
     <input class="searchInput" type="text" placeholder="Search character" [formControl]="request">
     <div *ngIf="requestChanges$ | async">
-        <div class="searchResults" *ngIf="search$ | async as search">
-            <div class="searchResult" *ngFor="let character of search">
-                <a [routerLink]="['/characters', character | parseIdFromUrl]">{{character.name}}</a>
+        <div *ngIf="search$ | async as search">
+            <div class="searchResults" *ngIf="search.length">
+                <div class="searchResult" *ngFor="let character of search">
+                    <a [routerLink]="['/characters', character | parseIdFromUrl]">{{character.name}}</a>
+                </div>
             </div>
         </div>
     </div>

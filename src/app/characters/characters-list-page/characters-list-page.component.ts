@@ -62,9 +62,10 @@ export class CharactersListPageComponent implements OnInit {
 
           const to: number = +this.currentPage * DISPLAYED_NUMBER_OF_CARDS;
           const from: number = to - (DISPLAYED_NUMBER_OF_CARDS - 1);
-          this.store.dispatch(charactersActions.loadCurrentRange({
+          this.store.dispatch(charactersActions.loadCurrentListFromRange({
             from: from,
-            to: to
+            to: to,
+            key: 'list'+this.currentPage
           }));
           return true;
         })

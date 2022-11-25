@@ -1,25 +1,14 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { Component, Input } from '@angular/core';
 import { IMovie } from '../../interfaces/movies';
-import { moviesSelector } from '../../selectors/movies.selectors';
 
 @Component({
   selector: 'app-movie',
   templateUrl: './movie.component.html',
-  styleUrls: ['./movie.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ['./movie.component.scss']
 })
-export class MovieComponent implements OnInit {
+export class MovieComponent {
 
   @Input() movie!: IMovie | null;
-  public poster$!: Observable<string | null>;
 
-  constructor(
-    private store: Store
-  ) { }
-
-  public ngOnInit(): void {
-    if (this.movie) this.poster$ = this.store.select(moviesSelector.getImagePosterByTitle(this.movie.title));
-  }
+  constructor() { }
 }

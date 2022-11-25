@@ -1,5 +1,5 @@
 <div *ngIf="isFound$ | async; else error">
-    <div *ngIf="response$ | async as response; else loading" class="wrapper">
+    <div *ngIf="character$ | async as character; else loading" class="wrapper">
         <section class="section-info">
             <img class="character-img" [src]="imagesUrl+'/characters/'+(character | parseIdFromUrl) +'.jpg'">
             <div class="character-name">{{character.name}}</div>
@@ -67,7 +67,7 @@
         <section class="section-films">
             <div class="section-name">Films</div>
             <div class="films">
-                <app-movie *ngFor="let movie$ of movies" [movie]="movie$ | async"></app-movie>
+                <app-movie *ngFor="let movie of movies$ | async" [movie]="movie"></app-movie>
             </div>
         </section>
     </div>

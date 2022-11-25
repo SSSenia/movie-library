@@ -5,6 +5,7 @@ import { ICharacter } from "../interfaces/characters";
 export interface CharactersState {
     parsedArray: ICharacter[];
     currentList: ICharacter[];
+    currentListKey: string;
     count: number;
     loadedNow: number;
     loadedNeed: number;
@@ -19,26 +20,36 @@ export const initialState: CharactersState = {
     loadedNeed: 0,
     count: 0,
     isFound: true,
-    request: ''
+    request: '',
+    currentListKey: ''
 };
 
 export const CharactersReducer = createReducer(
     initialState,
-    on(charactersActions.setItem, (state, { character }) => ({
+    on(charactersActions.setItem, (state, { char }) => ({
         ...state,
-        parsedArray: (!state.parsedArray.find(item => item.id == character.id)) ? state.parsedArray.concat([character]) : state.parsedArray
+        parsedArray: (!state.parsedArray.find(item => item.id == char.id)) ? state.parsedArray.concat([char]) : state.parsedArray
     })),
-    on(charactersActions.loadedCount, (state, { count }) => ({
+    on(charactersActions.loadedCount, (state, { count, characters }) => ({
         ...state,
-        count: count
+        count: count,
+        parsedArray: characters
     })),
-    on(charactersActions.loadCurrentRange, (state, range) => ({
+    on(charactersActions.loadCurrentListFromRange, (state, { from, to, key }) => ({
         ...state,
         currentList: [],
-        loadedNeed: (range.to > state.count ? state.count : range.to) - range.from + 1,
-        loadedNow: 0
+        loadedNeed: (to > state.count ? state.count : to) - from + 1,
+        loadedNow: 0,
+        currentListKey: key
     })),
-    on(charactersActions.loadedCurrentRange, (state, { char }) => ({
+    on(charactersActions.loadCurrentListFromArray, (state, { request, key }) => ({
+        ...state,
+        currentList: [],
+        loadedNeed: request.length,
+        loadedNow: 0,
+        currentListKey: key
+    })),
+    on(charactersActions.loadedCharacterToCurrentList, (state, { char, key }) => key != state.currentListKey ? state : ({
         ...state,
         currentList: char ? state.currentList.concat([char]) : state.currentList,
         loadedNow: state.loadedNow + 1
@@ -51,7 +62,7 @@ export const CharactersReducer = createReducer(
         ...state,
         isFound: false
     })),
-    on(charactersActions.setRequest, (state, {request})=>({
+    on(charactersActions.setRequest, (state, { request }) => ({
         ...state,
         request: request
     }))

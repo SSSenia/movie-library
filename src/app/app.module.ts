@@ -34,7 +34,7 @@ import { OthersEffects } from './shared/effects/others.effects';
     StoreModule.forRoot(reducers, {
       metaReducers
     }),
-    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
+    StoreDevtoolsModule.instrument({ maxAge: 100, logOnly: environment.production }),
     EffectsModule.forRoot([CharactersEffects, MoviesEffects, OthersEffects]),
     StoreRouterConnectingModule.forRoot(),
   ],

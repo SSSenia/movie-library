@@ -1,4 +1,3 @@
-import { state } from "@angular/animations";
 import { createFeatureSelector, createSelector } from "@ngrx/store";
 import { ICharacter } from "../interfaces/characters";
 import { CharactersState } from "../reducers/characters.reducer";
@@ -37,9 +36,6 @@ export const charactersSelector = {
     ),
     getById: (id: number) => createSelector(
         featureSelector,
-        state => {
-            const search = state.parsedArray.find(c => c.id === id)
-            return search ? search : null;
-        }
+        state => state.parsedArray.find(c => c.id === id)
     )
 };

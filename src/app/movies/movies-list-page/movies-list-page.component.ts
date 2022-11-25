@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { moviesActions } from 'src/app/shared/actions/movies.actions';
-import { IArrayDataMovie } from 'src/app/shared/interfaces/movies';
+import { IMovie } from 'src/app/shared/interfaces/movies';
 import { moviesSelector } from 'src/app/shared/selectors/movies.selectors';
 
 @Component({
@@ -13,7 +13,7 @@ import { moviesSelector } from 'src/app/shared/selectors/movies.selectors';
 })
 export class MoviesListPageComponent implements OnInit {
 
-  public response$: Observable<IArrayDataMovie | undefined> = this.store.select(moviesSelector.getFullData);
+  public response$: Observable<IMovie[] | undefined> = this.store.select(moviesSelector.getAll);
 
   constructor(private store: Store) { }
 

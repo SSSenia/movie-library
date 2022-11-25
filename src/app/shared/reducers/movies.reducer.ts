@@ -1,26 +1,26 @@
 import { createReducer, on } from "@ngrx/store";
 import { moviesActions } from "../actions/movies.actions";
-import { IArrayDataMovie, IMovie, IPoster } from "../interfaces/movies";
+import { IMovie } from "../interfaces/movies";
 
 export interface MoviesState {
-    fullData?: IArrayDataMovie;
+    isAllLoaded: boolean;
     movies: IMovie[];
     isFound: boolean;
-    posters: IPoster[];
+    currentList: IMovie[]
 }
 
 export const initialState: MoviesState = {
+    isAllLoaded: false,
     movies: [],
     isFound: true,
-    posters: []
+    currentList: []
 };
 
 export const MoviesReducer = createReducer(
     initialState,
-    on(moviesActions.loadedAll, (state, { fullData }) => ({
+    on(moviesActions.loadedAll, (state) => ({
         ...state,
-        fullData: fullData,
-        movies: fullData.results
+        isAllLoaded: true
     })),
     on(moviesActions.loadedById, (state, movie) => ({
         ...state,
@@ -34,8 +34,12 @@ export const MoviesReducer = createReducer(
         ...state,
         isFound: false
     })),
-    on(moviesActions.loadedPoster, (state, poster) => ({
+    on(moviesActions.loadCurrentListFromArray, (state,) => ({
         ...state,
-        posters: state.posters.find(x => x.movieTitle === poster.movieTitle) ? state.posters : state.posters.concat([poster])
-    }))
+        currentList: []
+    })),
+    on(moviesActions.loadedCharacterToCurrentList, (state, { movie }) => ({
+        ...state,
+        currentList: movie ? state.currentList.concat([movie]) : state.currentList
+    })),
 );

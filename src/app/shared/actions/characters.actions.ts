@@ -4,7 +4,7 @@ import { ICharacter } from "../interfaces/characters";
 export const charactersActions = {
     setItem: createAction(
         '[Characters] Set Item',
-        props<{ character: ICharacter }>()
+        props<{ char: ICharacter }>()
     ),
     setRequest: createAction(
         '[Characters] Set Request',
@@ -16,16 +16,20 @@ export const charactersActions = {
     ),
     loadCount: createAction('[Characters] Load Count'),
     loadedCount: createAction(
-        '[Charactes] Loaded Count',
-        props<{ count: number }>()
+        '[Characters] Loaded Count',
+        props<{ count: number, characters: ICharacter[] }>()
     ),
-    loadCurrentRange: createAction(
+    loadCurrentListFromRange: createAction(
         '[Characters] Load Current Range',
-        props<{ from: number, to: number }>()
+        props<{ from: number, to: number, key: string }>()
     ),
-    loadedCurrentRange: createAction(
+    loadCurrentListFromArray: createAction(
+        '[Characters] Load Current List',
+        props<{ request: string[], key: string }>()
+    ),
+    loadedCharacterToCurrentList: createAction(
         '[Characters] Current Range Loaded',
-        props<{ char: ICharacter | null }>()
+        props<{ char: ICharacter | null, key: string }>()
     ),
     notFound: createAction('[Characters] Character Not Found'),
     found: createAction('[Characters] Character Found')
