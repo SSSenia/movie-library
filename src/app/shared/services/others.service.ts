@@ -16,16 +16,19 @@ export class OthersService {
     private charactersService: CharactersService
   ) { }
 
-  getPlanetByAdress(url: string): Observable<IPlanet> {
+  public getPlanetByAdress(url: string): Observable<IPlanet> {
     return this.http.get<IPlanet>(url);
   }
-  getStarshipByAdress(url: string): Observable<IStarship> {
+
+  public getStarshipByAdress(url: string): Observable<IStarship> {
     return this.http.get<IStarship>(url);
   }
-  getMovieByAdress(url: string): Observable<IMovie> {
+
+  public getMovieByAdress(url: string): Observable<IMovie> {
     return this.http.get<IMovie>(url);
   }
-  getCharacterByAdress(url: string): Observable<ICharacter> {
+
+  public getCharacterByAdress(url: string): Observable<ICharacter> {
     return this.charactersService.getById(+url.split('/').slice(-2)[0]);
   }
 }

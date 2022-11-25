@@ -1,8 +1,8 @@
-<a [routerLink]="['/movies', movie | parseIdFromUrl]" *ngIf="movie.posterObservable | async as posterObservable">
+<a [routerLink]="['/movies', movie | parseIdFromUrl]" *ngIf="movie">
     <div class="card">
         <div class="name">
             <p>{{movie.title}}</p>
         </div>
-        <img [src]="'https://image.tmdb.org/t/p/w500'+posterObservable">
+        <img [src]="'https://image.tmdb.org/t/p/w500'+ movie.poster">
     </div>
 </a>

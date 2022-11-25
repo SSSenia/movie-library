@@ -1,79 +1,73 @@
-import { Component } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { map, switchMap, concatMap, Observable, mergeMap, catchError, range, EMPTY } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { switchMap, Observable, map, tap } from 'rxjs';
+import { charactersActions } from 'src/app/shared/actions/characters.actions';
 import { ICharacter } from 'src/app/shared/interfaces/characters';
-import { CharactersService } from 'src/app/shared/services/characters.service';
+import { charactersSelector } from 'src/app/shared/selectors/characters.selectors';
 
 const DISPLAYED_NUMBER_OF_CARDS = 18;
 
 @Component({
   selector: 'app-characters-list-page',
   templateUrl: './characters-list-page.component.html',
-  styleUrls: ['./characters-list-page.component.scss']
+  styleUrls: ['./characters-list-page.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CharactersListPageComponent {
+export class CharactersListPageComponent implements OnInit {
 
-  currentPage: number = 1;
-  maxPages!: number;
-  loadedNeed!: number;
-  loaded!: number;
-  avialablePages: number[] = [];
-  characters: ICharacter[] = [];
-  response$!: Observable<ICharacter[]>;
+  public currentPage: number = 1;
+  public maxPages!: number;
+  public avialablePages: number[] = [];
 
-  from: FormGroup = new FormGroup({
-    search: new FormControl('')
-  });
+  public response$!: Observable<boolean>;
+  public requestChanges$!: Observable<string | null>;
+  public search$: Observable<ICharacter[]> = this.store.select(charactersSelector.search);
+  public loadedNow$: Observable<number> = this.store.select(charactersSelector.loadedNow);
+  public loadedNeed$: Observable<number> = this.store.select(charactersSelector.loadedNeed);
+  public list$: Observable<ICharacter[]> = this.store.select(charactersSelector.list);
+
+  public request = new FormControl('');
 
   constructor(
-    private characterService: CharactersService,
+    private store: Store,
     private route: ActivatedRoute,
     private router: Router
-  ) {
+  ) { }
+
+  public ngOnInit(): void {
+    this.requestChanges$ = this.request.valueChanges.pipe(
+      tap((value) => this.store.dispatch(charactersActions.setRequest({ request: value == null ? '' : value })))
+    );
+    this.store.dispatch(charactersActions.loadCount());
     this.response$ = this.route.queryParams
       .pipe(
-        concatMap((params: Params) => {
+        switchMap((params: Params) => {
           this.currentPage = params['page'] != undefined ? params['page'] : this.currentPage;
 
           this.avialablePages = [];
-          this.characters = [];
-          this.loaded = 0;
-
-          return this.characterService.getCount();
+          return this.store.select(charactersSelector.count);
         }),
 
-        switchMap((count: number) => {
+        map((count: number) => {
           this.maxPages = Math.ceil(count / DISPLAYED_NUMBER_OF_CARDS);
 
           for (let i = 1; i <= this.maxPages; i++) this.avialablePages.push(i);
 
           if (!this.avialablePages.find(x => x == this.currentPage)) {
             this.router.navigate(['/characters'], { queryParams: { page: 1 } });
-            return EMPTY;
+            return false;
           }
-          
-          let to: number = +this.currentPage * DISPLAYED_NUMBER_OF_CARDS;
-          let from: number = to - (DISPLAYED_NUMBER_OF_CARDS - 1);
-          this.loadedNeed = (to > count ? count : to) - from + 1;
 
-          return range(from, this.loadedNeed);
-        }),
-
-        mergeMap((id: number): Observable<ICharacter> => {
-          return this.characterService.getById(id)
-            .pipe(
-              catchError(() => {
-                this.loaded++;
-                return EMPTY;
-              })
-            );
-        }),
-
-        map((character: ICharacter) => {
-          this.loaded++;
-          this.characters.push(character);
-          return this.characters.sort((a, b) => { return a.id - b.id });
+          const to: number = +this.currentPage * DISPLAYED_NUMBER_OF_CARDS;
+          const from: number = to - (DISPLAYED_NUMBER_OF_CARDS - 1);
+          this.store.dispatch(charactersActions.loadCurrentListFromRange({
+            from: from,
+            to: to,
+            key: 'list'+this.currentPage
+          }));
+          return true;
         })
       );
   }

@@ -8,7 +8,7 @@ import { IMovie } from '../../interfaces/movies';
 })
 export class MovieComponent {
 
-  @Input() movie!: IMovie;
+  @Input() movie!: IMovie | null;
 
   constructor() { }
 }
